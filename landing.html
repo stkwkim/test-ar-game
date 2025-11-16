@@ -1011,28 +1011,28 @@
             }
         }
         
-        // 发送邮件功能
+        // 发送邮件功能 - 解决乱码问题
         function sendEmail(formData) {
             const email = 'stkwkim@gmail.com';
             const subject = '香港城市解謎報名表';
             
-            // 构建邮件内容
-            let body = '香港城市解謎報名資料：\n\n';
-            body += `主要聯絡人姓名：${formData.name}\n`;
-            body += `手機號碼：${formData.phone}\n`;
-            body += `電子郵件：${formData.email}\n`;
-            body += `參與人數：${formData.participants}\n`;
+            // 构建邮件内容 - 使用UTF-8编码
+            let body = '香港城市解謎報名資料：%0D%0A%0D%0A';
+            body += `主要聯絡人姓名：${encodeURIComponent(formData.name)}%0D%0A`;
+            body += `手機號碼：${encodeURIComponent(formData.phone)}%0D%0A`;
+            body += `電子郵件：${encodeURIComponent(formData.email)}%0D%0A`;
+            body += `參與人數：${encodeURIComponent(formData.participants)}%0D%0A`;
             
             if (formData.otherParticipants) {
-                body += `其他參加者資料：\n${formData.otherParticipants}\n`;
+                body += `其他參加者資料：%0D%0A${encodeURIComponent(formData.otherParticipants)}%0D%0A`;
             }
             
-            body += `選擇日期：${formData.date}\n`;
-            body += `禮物數量：${formData.participants}份\n\n`;
-            body += `提交時間：${new Date().toLocaleString('zh-HK')}`;
+            body += `選擇日期：${encodeURIComponent(formData.date)}%0D%0A`;
+            body += `禮物數量：${encodeURIComponent(formData.participants)}份%0D%0A%0D%0A`;
+            body += `提交時間：${encodeURIComponent(new Date().toLocaleString('zh-HK'))}`;
             
-            // 使用mailto链接
-            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            // 使用mailto链接 - 确保使用UTF-8编码
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${body}`;
             
             // 打开邮件客户端
             window.location.href = mailtoLink;
