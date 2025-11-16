@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>九龍城土瓜灣探索（按鈕修復版）</title>
+    <title>九龍城土瓜灣探索（ES5 相容版）</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -27,6 +27,7 @@
         .qr-code{text-align:center;margin:1rem 0}.qr-code img{width:140px;height:140px}.qr-instruction{font-size:.75rem;color:#555;margin-top:.5rem}
         @media (min-width:600px){h1{font-size:1.75rem}.poem-mask{font-size:1.5rem}}
     </style>
+<base target="_blank">
 </head>
 <body>
 <div class="container">
@@ -40,7 +41,7 @@
         </div>
     </div>
 
-    <!-- ===== 題目 1 ===== -->
+    <!-- 題目1 -->
     <div id="location-1" class="location-card">
         <h2>📍 九龍寨城公園<span id="dist-1" class="distance-badge">計算中…</span></h2>
         <p><strong>故事：</strong>這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。</p>
@@ -61,7 +62,7 @@
         </div>
     </div>
 
-    <!-- ===== 題目 2 ===== -->
+    <!-- 題目2 -->
     <div id="location-2" class="location-card" style="display:none">
         <h2>🏢 十三街舊樓群<span id="dist-2" class="distance-badge">計算中…</span></h2>
         <p><strong>故事：</strong>十三街見證了土瓜灣的工業發展史，戰前騎樓融合中西風格。</p>
@@ -82,7 +83,7 @@
         </div>
     </div>
 
-    <!-- ===== 題目 3 ===== -->
+    <!-- 題目3 -->
     <div id="location-3" class="location-card" style="display:none">
         <h2>🎨 牛棚藝術村<span id="dist-3" class="distance-badge">計算中…</span></h2>
         <p><strong>故事：</strong>1908 年建成的市區屠宰場，活化後成為藝術家工作室與展場。</p>
@@ -103,7 +104,7 @@
         </div>
     </div>
 
-    <!-- ===== 題目 4 ===== -->
+    <!-- 題目4 -->
     <div id="location-4" class="location-card" style="display:none">
         <h2>🌊 海心公園<span id="dist-4" class="distance-badge">計算中…</span></h2>
         <p><strong>故事：</strong>以魚尾石聞名，從前漁民在此祈求平安，園內有鄭成功石像。</p>
@@ -124,7 +125,7 @@
         </div>
     </div>
 
-    <!-- ===== 題目 5 ===== -->
+    <!-- 題目5 -->
     <div id="location-5" class="location-card" style="display:none">
         <h2>👑 宋皇臺公園<span id="dist-5" class="distance-badge">計算中…</span></h2>
         <p><strong>故事：</strong>南宋最後兩位皇帝逃避元軍之地，「宋皇臺」石刻見證香港古今。</p>
@@ -145,7 +146,7 @@
         </div>
     </div>
 
-    <!-- ===== 題目 6 ===== -->
+    <!-- 題目6 -->
     <div id="location-6" class="location-card" style="display:none">
         <h2>🙏 紅磡觀音廟<span id="dist-6" class="distance-badge">計算中…</span></h2>
         <p><strong>故事：</strong>1873 年建成的香港二級歷史建築，社區信仰與凝聚核心。</p>
@@ -166,7 +167,7 @@
         </div>
     </div>
 
-    <!-- ===== 完成頁 ===== -->
+    <!-- 完成頁 -->
     <div id="completion" class="completion" style="display:none;text-align:center;">
         <h2>🎉 恭喜您完成所有探索！</h2>
         <p>您已成功完成九龍城土瓜灣的 6 個歷史地點探索！</p>
@@ -205,12 +206,12 @@
 <div id="gpsVideo" class="gps-video-overlay"><iframe id="gpsPlayer" allow="autoplay" allowfullscreen></iframe></div>
 
 <script>
-/* ========== 核心流程（保留 GPS 弹窗 & 诗意过渡 & 神秘按钮） ========== */
+/* ========== 核心流程：ES5 相容 + 答對才過場 ========== */
 let currentLocation = 1;
 const totalLocations = 6;
 const hintCounters = {1:0,2:0,3:0,4:0,5:0,6:0};
 
-/* ---- 更富诗意提示 ---- */
+/* ---- 下一地點詩意提示 ---- */
 const nextPoem = {
   2:'磚瓦疊疊，歲月斑斑；下一頁，騎樓將把舊夢翻響。',
   3:'鐵閘背後，曾經牛聲低迴；紅磚待你，續寫藝術新章。',
@@ -226,18 +227,21 @@ function updateProgress(){
   document.getElementById('remaining-percent').textContent = Math.round(100-pc);
   document.getElementById('progress-fill').style.width = pc + '%';
 }
+
+/* ✅ 只有答對才會被調用 */
 function showPoemThenNext(){
   document.getElementById('location-'+currentLocation).style.display='none';
   const wrap = document.createElement('div');
   wrap.id = 'poem-mask';
   wrap.className = 'poem-mask';
-  wrap.innerHTML = `
-    <div>
-      <p>${nextPoem[currentLocation+1]||''}</p>
-      <button class="btn btn-success" onclick="goNextLocation()">估下下個任務地方</button>
-    </div>`;
+  wrap.innerHTML = 
+    '<div>' +
+      '<p>' + (nextPoem[currentLocation+1]||'') + '</p>' +
+      '<button class="btn btn-success" onclick="goNextLocation()">估下下個任務地方</button>' +
+    '</div>';
   document.body.appendChild(wrap);
 }
+
 function goNextLocation(){
   const mask = document.getElementById('poem-mask');
   if(mask) mask.remove();
@@ -249,19 +253,30 @@ function goNextLocation(){
     completeGame();
   }
 }
+
+/* ✅ 嚴格比對：只有正確才進入詩意過場 */
 function checkAnswer(locationNum,correctAnswer){
-  const userAnswer=document.getElementById('answer-'+locationNum).value.trim().toLowerCase();
-  const correct=correctAnswer.toLowerCase();
-  let ok=false;
-  if(userAnswer===correct||userAnswer.includes(correct)||correct.includes(userAnswer)) ok=true;
-  if(correct==='1950'&&(userAnswer==='50年代'||userAnswer==='五十年代')) ok=true;
-  if(ok){
+  const userAnswer = document.getElementById('answer-'+locationNum).value.trim().toLowerCase();
+  const correct = correctAnswer.toLowerCase();
+  let isCorrect = false;
+  
+  // 嚴格比對邏輯
+  if(userAnswer === correct) {
+    isCorrect = true;
+  }
+  // 針對特定題目的寬鬆比對
+  if(locationNum === 2 && (userAnswer === '50年代' || userAnswer === '五十年代')) {
+    isCorrect = true;
+  }
+
+  if(isCorrect){
     document.getElementById('answer-'+locationNum).value='';
-    showPoemThenNext();
+    showPoemThenNext(); // 只有正確才顯示詩句
   }else{
     alert('❌ 答案不正確，請再試一次或查看提示。');
   }
 }
+
 function showHint(locationNum){
   hintCounters[locationNum]++;
   document.getElementById('hint-count-'+locationNum).textContent=hintCounters[locationNum];
@@ -275,9 +290,10 @@ function showHint(locationNum){
   };
   alert(hints[locationNum][Math.min(hintCounters[locationNum],3)]);
   if(hintCounters[locationNum]===3){
-    setTimeout(()=>{ hintCounters[locationNum]=0; document.getElementById('hint-count-'+locationNum).textContent='0'; },2000);
+    setTimeout(function(){ hintCounters[locationNum]=0; document.getElementById('hint-count-'+locationNum).textContent='0'; },2000);
   }
 }
+
 function showVideo(locationNum,type){
   const videoInfo={
     1:{history:{title:'九龍寨城歷史',youtubeId:'dQw4w9WgXcQ'},story:{title:'九龍寨城故事進度',youtubeId:'dQw4w9WgXcQ'}},
@@ -290,7 +306,7 @@ function showVideo(locationNum,type){
   const info=videoInfo[locationNum][type];
   document.getElementById('video-title').textContent=info.title;
   document.getElementById('video-description').textContent=info.title;
-  document.getElementById('video-player').src=`https://www.youtube.com/embed/${info.youtubeId}?autoplay=1&rel=0`;
+  document.getElementById('video-player').src='https://www.youtube.com/embed/'+info.youtubeId+'?autoplay=1&rel=0';
   document.getElementById('video-modal').style.display='flex';
 }
 function closeVideo(){
@@ -331,24 +347,31 @@ const player  = document.getElementById('gpsPlayer');
 const overlay = document.getElementById('gpsVideo');
 const prompt  = document.getElementById('gpsPrompt');
 let promptShownSet = new Set();
+
+/* ✅ 修復：改用 Math.pow() 兼容所有瀏覽器 */
 function dist(a,b){
-  const R=6371000, toRad=d=>d*Math.PI/180, dLat=toRad(b.lat-a.lat), dLng=toRad(b.lng-a.lng);
+  const R=6371000, toRad=function(d){return d*Math.PI/180;};
+  const dLat=toRad(b.lat-a.lat), dLng=toRad(b.lng-a.lng);
   const la1=toRad(a.lat), la2=toRad(b.lat);
-  return 2*R*Math.asin(Math.sqrt(Math.sin(dLat/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)**2));
+  return 2*R*Math.asin(Math.sqrt(
+    Math.pow(Math.sin(dLat/2),2) + 
+    Math.cos(la1)*Math.cos(la2)*Math.pow(Math.sin(dLng/2),2)
+  ));
 }
+
 function closePrompt(){ prompt.style.display='none'; }
 function playSelected(type){
   const id=Number(prompt.dataset.poiId);
   overlay.style.display='block';
-  player.src=`https://www.youtube.com/embed/${VIDEOS[id][type]}?autoplay=1&rel=0`;
+  player.src='https://www.youtube.com/embed/'+VIDEOS[id][type]+'?autoplay=1&rel=0';
   closePrompt();
-  setTimeout(()=>{ overlay.style.display='none'; player.src=''; },20000);
+  setTimeout(function(){ overlay.style.display='none'; player.src=''; },20000);
 }
 function watchGPS(){
   navigator.geolocation.watchPosition(
-    pos=>{
+    function(pos){
       const here={lat:pos.coords.latitude, lng:pos.coords.longitude};
-      POIS.forEach(p=>{
+      POIS.forEach(function(p){
         const d=Math.round(dist(here,p));
         const badge=document.getElementById('dist-'+p.id);
         if(badge) badge.textContent=d<1000?d+' m':(d/1000).toFixed(1)+' km';
@@ -360,37 +383,37 @@ function watchGPS(){
         }
       });
     },
-    err=>console.warn('GPS 錯誤:',err),
+    function(err){alert('GPS 錯誤：'+err.message);},
     {enableHighAccuracy:true, maximumAge:5000}
   );
 }
-window.addEventListener('load',()=>{
+window.addEventListener('load',function(){
   if(navigator.geolocation) watchGPS();
   else alert('裝置不支援 GPS，無法使用距離與影片提示。');
   updateProgress();
 });
 
-/* ---- 自拍維持原樣 ---- */
+/* ---- 自拍功能 ---- */
 function takeSelfie(locationNum){
   const canvas=document.getElementById('canvas-'+locationNum);
   const ctx=canvas.getContext('2d');
   const img=document.getElementById('selfie-'+locationNum);
   ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,600,600);
   ctx.fillStyle='#000000'; ctx.font='bold 48px Arial'; ctx.textAlign='center';
-  const site=locationNum===0?'九龍城土瓜灣探索':POIS.find(p=>p.id===locationNum).name;
+  const site=locationNum===0?'九龍城土瓜灣探索':POIS.find(function(p){return p.id===locationNum;}).name;
   ctx.fillText('我已完成【'+site+'】任務！',300,300);
   navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false})
-  .then(stream=>{
+  .then(function(stream){
     const video=document.createElement('video'); video.srcObject=stream; video.play();
-    video.addEventListener('loadedmetadata',()=>{
+    video.addEventListener('loadedmetadata',function(){
       ctx.drawImage(video,150,350,300,200);
-      stream.getTracks().forEach(t=>t.stop());
+      stream.getTracks().forEach(function(t){t.stop();});
       const dataURL=canvas.toDataURL('image/jpeg',0.9);
       img.src=dataURL; img.style.display='block';
-      location.href='https://wa.me/85266837444?text='+encodeURIComponent('我已完成【'+site+'】任務！');
+      window.location.href='https://wa.me/85266837444?text='+encodeURIComponent('我已完成【'+site+'】任務！');
     });
   })
-  .catch(err=>{alert('無法開啟相機，請檢查權限。'); console.error(err)});
+  .catch(function(err){alert('無法開啟相機，請檢查權限。'); console.error(err);});
 }
 </script>
 </body>
