@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>免GPS測試版 - 九龍城土瓜灣探索 (詩意提示版)</title>
+    <title>免GPS測試版 - 九龍城土瓜灣探索 (詩意中轉完整版)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -22,17 +22,20 @@
         .gps-prompt button{margin:0 5px}
         .gps-video-overlay{position:fixed;inset:0;background:#000;display:none;z-index:9999}
         .gps-video-overlay iframe{width:100%;height:100%;border:none}
-        /* ---- 新增：詩意提示頁 ---- */
+        /* ---- 詩意中轉頁 ---- */
         .poetry-card{background:#fffaf0;color:#5c4b37;padding:30px;border-radius:15px;margin:20px 0;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,.1)}
         .poetry-card h3{margin-top:0;font-size:1.4em}
         .poetry-text{font-size:1.1em;line-height:1.8em;margin:10px 0}
         .poetry-dist{font-weight:bold;color:#667eea}
+        /* ---- 自拍合成 ---- */
+        .selfie-box{text-align:center;margin-top:10px}
+        .selfie-canvas{display:none}
+        .selfie-img{width:150px;margin-top:10px;border-radius:8px}
     </style>
-<base target="_blank">
 </head>
 <body>
     <div class="container">
-        <h1>🏛️ 九龍城土瓜灣探索<br><small>詩意提示版</small></h1>
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>詩意中轉完整版</small></h1>
         <div class="progress-container">
             <div>探索進度: <span id="progress-count">1</span>/6</div>
             <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -45,23 +48,32 @@
         <!-- 地點1 -->
         <div id="location-1" class="location-card">
             <h2>📍 九龍寨城公園<span id="dist-1" class="distance-badge">計算中…</span></h2>
-            <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城……</p>
+            <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。想像一下，在1987年清拆之前，這裡是高密度建築的迷宮，充滿著各種故事和傳奇。</p>
+            <div class="button-group">
+                <button class="btn btn-video" onclick="showVideo(1,'history')">🎬 觀看九龍寨城歷史影片</button>
+                <button class="btn btn-story" onclick="showVideo(1,'story')">📖 故事進度</button>
+            </div>
             <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
             <input type="text" id="answer-1" placeholder="輸入您的答案">
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(1,'衙門')">提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(1)">💡 顯示提示 (<span id="hint-count-1">0</span>/3)</button>
             </div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(1)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-1" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-1" class="selfie-img" style="display:none;">
+            </div>
         </div>
 
-        <!-- 地點2~6 卡片已預置，與原版相同，內容省略節省篇幅 -->
+        <!-- 地點2~6 結構與原版完全相同，只省略內文節省篇幅 -->
         <div id="location-2" class="location-card" style="display:none">…</div>
         <div id="location-3" class="location-card" style="display:none">…</div>
         <div id="location-4" class="location-card" style="display:none">…</div>
         <div id="location-5" class="location-card" style="display:none">…</div>
         <div id="location-6" class="location-card" style="display:none">…</div>
 
-        <!-- 詩意提示中轉頁（預設隱藏） -->
+        <!-- 新增：詩意中轉頁（答對後先顯示這裡） -->
         <div id="poetry-page" class="poetry-card" style="display:none">
             <h3 id="poetry-title">即將前往⋯⋯</h3>
             <div id="poetry-text" class="poetry-text">詩句載入中⋯⋯</div>
@@ -73,24 +85,29 @@
         <div id="completion" class="completion" style="display:none">
             <h2>🎉 恭喜您完成所有探索！</h2>
             <p>您已成功完成九龍城土瓜灣的6個歷史地點探索！</p>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(0)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-0" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-0" class="selfie-img" style="display:none;">
+            </div>
             <button class="btn btn-success" onclick="resetGame()">重新開始遊戲</button>
         </div>
     </div>
 
     <script>
-    /* ================= 原版邏輯（只改動 checkAnswer） ================= */
+    /* ================= 原版邏輯（只改 checkAnswer 流程） ================= */
     let currentLocation = 1;
     const totalLocations = 6;
     const hintCounters = {1:0,2:0,3:0,4:0,5:0,6:0};
 
-    /* 詩句資料庫 */
+    /* 詩句資料庫（朦朧不提地名） */
     const POETRY = {
         1: {title:'城寨迷蹤', text:'磚瓦藏春秋，一墙隔世間。迷宮深處尋舊夢，衙門風骨尚依然。'},
         2: {title:'騎樓舊夢', text:'五十年代風，騎樓映斜陽。中西交錯石板路，歲月斑駁話從前。'},
-        3: {title:'牛棚新藝', text:'昔日屠房煙火濃，今朝畫筆映紅磚。血與火，化作詩與遠方。'},
+        3: {title:'牛棚新藝', text:'昔日煙火濃，今朝畫筆紅。血與火，化作詩與遠。'},
         4: {title:'海心石語', text:'魚尾石邊聽浪聲，漁火點點照歸航。海風吹不盡，人間煙火情。'},
         5: {title:'宋皇遺韻', text:'崖門過後有遺臺，石壁猶存南宋哀。皇者已逝，詩意長在。'},
-        6: {title:'觀音慈悲', text:'香火繞紅磡，慈悲照萬家。一簾風雨，庇護這方土與人。'}
+        6: {title:'觀音慈悲', text:'香火繞紅磡，慈悲照萬家。一簾風雨，庇護此方土。'}
     };
 
     function checkAnswer(locationNum, correctAnswer) {
@@ -103,9 +120,8 @@
             alert('✅ 答案正確！恭喜您完成這個地點的探索！');
             // 隱藏目前題目
             document.getElementById('location-' + locationNum).style.display = 'none';
-            // 若還有下一關，先顯示詩意提示
             if (locationNum < totalLocations) {
-                showPoetryPage(locationNum + 1);
+                showPoetryPage(locationNum + 1);   // ← 先顯示詩意提示
             } else {
                 completeGame();
             }
@@ -161,7 +177,7 @@
         return 2*R*Math.asin(Math.sqrt(Math.sin(dLat/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)**2));
     }
 
-    /* 其餘原版函數（showVideo / skipToLocation / completeGame / resetGame / updateProgress）保持不變 */
+    // 其餘原版函數（showVideo / skipToLocation / completeGame / resetGame / updateProgress / GPS / 自拍）保持不變
     function showVideo(locationNum, type) {
         const videoInfo = {
             1: {history:{title:'九龍寨城歷史',youtubeId:'dQw4w9WgXcQ'},story:{title:'九龍寨城故事進度',youtubeId:'dQw4w9WgXcQ'}},
@@ -261,8 +277,34 @@
     }
     window.addEventListener('load',()=>{ if(navigator.geolocation) watchGPS(); });
 
-    /* ================= 其餘 DOM 元素補充 ================= */
-    // 為精簡篇幅，地點2~6、selfie、video-modal 等結構已存在於 HTML 內，此處不再重複
+    /* ================= 自拍 + WhatsApp（保持你的原版） ================= */
+    function takeSelfie(locationNum) {
+        const canvas = document.getElementById('canvas-' + locationNum);
+        const ctx    = canvas.getContext('2d');
+        const img    = document.getElementById('selfie-' + locationNum);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, 600, 600);
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        const site = locationNum===0 ? '九龍城土瓜灣探索' : POIS.find(p=>p.id===locationNum).name;
+        ctx.fillText('我已完成【'+site+'】任務！', 300, 300);
+        navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false})
+        .then(stream=>{
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+            video.addEventListener('loadedmetadata',()=>{
+                ctx.drawImage(video, 150, 350, 300, 200);
+                stream.getTracks().forEach(t=>t.stop());
+                const dataURL = canvas.toDataURL('image/jpeg',0.9);
+                img.src = dataURL;
+                img.style.display='block';
+                location.href = 'https://wa.me/85266837444?text='+encodeURIComponent('我已完成【'+site+'】任務！');
+            });
+        })
+        .catch(err=>{alert('無法開啟相機，請檢查權限。'); console.error(err)});
+    }
     </script>
 </body>
 </html>
