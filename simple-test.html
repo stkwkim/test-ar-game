@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>極簡遊戲測試</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .screen { display: none; }
+        .active { display: block; }
+        .btn { padding: 10px 20px; margin: 5px; }
+        .location { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <!-- 開始畫面 -->
+    <div id="start-screen" class="screen active">
+        <h1>極簡遊戲測試</h1>
+        <p>這個版本跳過GPS，直接測試遊戲流程</p>
+        <button class="btn" onclick="startGame()">開始測試</button>
+    </div>
+
+    <!-- 遊戲畫面 -->
+    <div id="game-screen" class="screen">
+        <h2>測試遊戲進行中</h2>
+        
+        <div id="location-1" class="location">
+            <h3>測試地點 1</h3>
+            <p>這是九龍寨城公園的測試故事...</p>
+            <input type="text" id="answer-1" placeholder="輸入答案">
+            <button onclick="checkAnswer(1, '衙門')">提交答案</button>
+            <button onclick="showHint(1)">提示</button>
+        </div>
+
+        <div id="location-2" class="location" style="display:none;">
+            <h3>測試地點 2</h3>
+            <p>這是十三街舊樓群的測試故事...</p>
+            <input type="text" id="answer-2" placeholder="輸入答案">
+            <button onclick="checkAnswer(2, '1950')">提交答案</button>
+            <button onclick="showHint(2)">提示</button>
+        </div>
+
+        <div id="completion" style="display:none; background:green; color:white; padding:20px;">
+            <h2>🎉 測試完成！</h2>
+            <p>遊戲流程測試成功！</p>
+            <button onclick="resetGame()">重新開始</button>
+        </div>
+    </div>
+
+    <script>
+        let currentLocation = 1;
+        const totalLocations = 2;
+
+        function startGame() {
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('game-screen').classList.add('active');
+        }
+
+        function checkAnswer(locationNum, correctAnswer) {
+            const userAnswer = document.getElementById('answer-' + locationNum).value;
+            
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                alert('答案正確！');
+                
+                // 隱藏當前地點，顯示下一個
+                document.getElementById('location-' + locationNum).style.display = 'none';
+                currentLocation++;
+                
+                if (currentLocation <= totalLocations) {
+                    document.getElementById('location-' + currentLocation).style.display = 'block';
+                } else {
+                    // 所有地點完成
+                    document.getElementById('completion').style.display = 'block';
+                }
+            } else {
+                alert('答案不正確，請再試一次！');
+            }
+        }
+
+        function showHint(locationNum) {
+            const hints = {
+                1: '留意公園內保存最完整的古建築',
+                2: '想想香港戰後重建的時期'
+            };
+            alert('提示：' + hints[locationNum]);
+        }
+
+        function resetGame() {
+            currentLocation = 1;
+            document.getElementById('completion').style.display = 'none';
+            document.getElementById('location-1').style.display = 'block';
+            document.getElementById('location-2').style.display = 'none';
+            document.getElementById('answer-1').value = '';
+            document.getElementById('answer-2').value = '';
+        }
+    </script>
+</body>
+</html>
