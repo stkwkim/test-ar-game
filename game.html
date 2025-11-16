@@ -4,37 +4,57 @@
     <title>AR探索遊戲</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="loading">載入中...</div>
+    <div id="loading">
+        <h2>遊戲載入中...</h2>
+        <p>請確保已允許瀏覽器使用您的位置信息</p>
+        <div class="loader"></div>
+    </div>
     
     <div id="game-container" style="display:none;">
+        <header>
+            <h1>九龍城土瓜灣探索之旅</h1>
+            <div id="gps-status" class="gps-status">GPS: 搜尋中...</div>
+        </header>
+        
         <div id="location-info">
-            <h2 id="loc-title"></h2>
-            <p id="loc-story"></p>
-            <div id="question-section">
+            <h2 id="loc-title">尋找第一個地點</h2>
+            <p id="loc-story">請移動到指定地點開始探索</p>
+            
+            <div id="question-section" style="display:none;">
                 <h3 id="question-text"></h3>
                 <input type="text" id="answer-input" placeholder="輸入您的答案">
-                <button onclick="checkAnswer()">提交答案</button>
-                <button onclick="showHint()" class="hint-btn">需要靈感？</button>
+                <div class="button-group">
+                    <button onclick="checkAnswer()">提交答案</button>
+                    <button onclick="showHint()" class="hint-btn">需要靈感？</button>
+                </div>
             </div>
-        </div>
-        
-        <div id="ar-container">
-            <!-- AR場景將在這裡載入 -->
+            
+            <div id="distance-info">
+                <p>距離下個地點: <span id="distance">-</span> 米</p>
+                <div class="compass">↑</div>
+            </div>
         </div>
         
         <div id="progress">
             <h3>探索進度</h3>
-            <div id="progress-bar"></div>
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
             <p>已完成：<span id="progress-count">0</span> / <span id="total-locations">0</span></p>
+        </div>
+        
+        <div class="debug-panel">
+            <button onclick="toggleDebug()">顯示除錯信息</button>
+            <div id="debug-info" style="display:none;">
+                <p>當前位置: <span id="debug-pos">-</span></p>
+                <p>最近地點: <span id="debug-nearby">-</span></p>
+            </div>
         </div>
     </div>
 
     <script src="js/game.js"></script>
-    <script src="js/gps-helper.js"></script>
 </body>
 </html>
