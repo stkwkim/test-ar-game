@@ -10,7 +10,7 @@
         h1{text-align:center;color:#667eea;margin-bottom:30px}
         .location-card{background:#f8f9fa;padding:20px;border-radius:10px;margin:20px 0;border-left:5px solid #667eea}
         .btn{background:#667eea;color:white;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-size:16px;margin:5px}
-        .btn:hover{background:#5a6fd8}.btn-success{background:#28a745}.btn-hint{background:#ffc107;color:black}.btn-video{background:#dc3545}.btn-story{background:#17a2b8}.btn-dev{background:#6c757d}
+        .btn:hover{background:#5a6fd8}.btn-success{background:#28a745}.btn-hint{background:#ffc107;color:black}.btn-video{background:#dc3545}.btn-story{background:#17a2b8}
         input{width:100%;padding:12px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:16px}
         .completion{background:#d4edda;color:#155724;padding:30px;border-radius:10px;text-align:center;margin:20px 0;display:none}
         .progress-container{text-align:center;margin:20px 0;font-weight:bold}
@@ -27,6 +27,7 @@
         .selfie-canvas{display:none}
         .selfie-img{width:150px;margin-top:10px;border-radius:8px}
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
@@ -172,8 +173,8 @@
             <p>您已成功完成九龍城土瓜灣的6個歷史地點探索！</p>
             <div class="qr-code">
                 <h3>完成獎勵二維碼</h3>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0168" alt="完成獎勵二維碼">
-                <p class="qr-instruction">掃描此二維碼可獲得數字代碼: 0168</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data= " alt="完成獎勵二維碼">
+                <p class="qr-instruction">掃描此二維碼可獲得數字代碼</p>
             </div>
             <div class="selfie-box">
                 <button class="btn btn-success" onclick="takeSelfie(0)">📸 自拍分享完成任務</button>
@@ -181,21 +182,6 @@
                 <img id="selfie-0" class="selfie-img" style="display:none;">
             </div>
             <button class="btn btn-success" onclick="resetGame()">重新開始遊戲</button>
-        </div>
-
-        <!-- 開發者工具 -->
-        <div class="dev-tools">
-            <h3>🔧 開發者工具</h3>
-            <p>快速跳轉到任意地點：</p>
-            <div class="button-group">
-                <button class="btn btn-dev" onclick="skipToLocation(1)">地點1</button>
-                <button class="btn btn-dev" onclick="skipToLocation(2)">地點2</button>
-                <button class="btn btn-dev" onclick="skipToLocation(3)">地點3</button>
-                <button class="btn btn-dev" onclick="skipToLocation(4)">地點4</button>
-                <button class="btn btn-dev" onclick="skipToLocation(5)">地點5</button>
-                <button class="btn btn-dev" onclick="skipToLocation(6)">地點6</button>
-                <button class="btn btn-success" onclick="completeGame()">直接完成遊戲</button>
-            </div>
         </div>
     </div>
 
@@ -287,7 +273,7 @@
         const info = videoInfo[locationNum][type];
         document.getElementById('video-title').textContent = info.title;
         document.getElementById('video-description').textContent = info.title;
-        document.getElementById('video-player').src = `https://www.youtube.com/embed/${info.youtubeId}?autoplay=1&rel=0`;
+        document.getElementById('video-player').src = `https://www.youtube.com/embed/ ${info.youtubeId}?autoplay=1&rel=0`;
         document.getElementById('video-modal').style.display = 'flex';
     }
 
@@ -296,12 +282,12 @@
         document.getElementById('video-player').src = '';
     }
 
-    function skipToLocation(n) {
-        for (let i = 1; i <= totalLocations; i++) document.getElementById('location-' + i).style.display = 'none';
-        document.getElementById('location-' + n).style.display = 'block';
-        currentLocation = n;
-        updateProgress();
-        document.getElementById('completion').style.display = 'none';
+    function updateProgress() {
+        const pc = Math.min(((currentLocation - 1) / totalLocations) * 100, 100);
+        document.getElementById('progress-count').textContent = currentLocation - 1;
+        document.getElementById('progress-percent').textContent = Math.round(pc);
+        document.getElementById('remaining-percent').textContent = Math.round(100 - pc);
+        document.getElementById('progress-fill').style.width = pc + '%';
     }
 
     function completeGame() {
@@ -322,14 +308,6 @@
             hintCounters[i] = 0;
             document.getElementById('hint-count-' + i).textContent = '0';
         }
-    }
-
-    function updateProgress() {
-        const pc = Math.min(((currentLocation - 1) / totalLocations) * 100, 100);
-        document.getElementById('progress-count').textContent = currentLocation - 1;
-        document.getElementById('progress-percent').textContent = Math.round(pc);
-        document.getElementById('remaining-percent').textContent = Math.round(100 - pc);
-        document.getElementById('progress-fill').style.width = pc + '%';
     }
 
     /* ================= 新增：GPS 距離 & 可選影片 ================= */
@@ -367,7 +345,7 @@
         pendingType = type;
         const id = Number(prompt.dataset.poiId);
         overlay.style.display='block';
-        player.src = `https://www.youtube.com/embed/${VIDEOS[id][type]}?autoplay=1&rel=0`;
+        player.src = `https://www.youtube.com/embed/ ${VIDEOS[id][type]}?autoplay=1&rel=0`;
         closePrompt();
         setTimeout(()=>{ overlay.style.display='none'; player.src=''; },20000);
     }
@@ -427,7 +405,7 @@
                 img.src = dataURL;
                 img.style.display='block';
                 // 生成 WhatsApp 分享連結
-                const whatsappURL = 'https://wa.me/85266837444?text='+
+                const whatsappURL = 'https://wa.me/85266837444?text= '+
                       encodeURIComponent('我已完成【'+site+'】任務！')+
                       '&media='+encodeURIComponent(dataURL);
                 // 跳 WhatsApp
