@@ -144,12 +144,12 @@
         },err=>{document.getElementById('poetry-dist').textContent='距離計算中...'});
     }
 
-    function showNextLocation(){
-        document.getElementById('poetry-page').style.display = 'none';
-        document.getElementById('location-' + currentLocation).style.display = 'block';
-        currentLocation++;
-        updateProgress();
-    }
+function showNextLocation(){
+    document.getElementById('poetry-page').style.display = 'none';
+    document.getElementById('location-' + currentLocation).style.display = 'block';   // ← 這行就是跳題
+    currentLocation++;
+    updateProgress();
+}
 
     function showHint(locationNum) {
         hintCounters[locationNum]++;
