@@ -1,60 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-HK">
 <head>
-    <title>AR探索遊戲</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探索進行中 - 九龍城土瓜灣AR探索</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="loading">
-        <h2>遊戲載入中...</h2>
-        <p>請確保已允許瀏覽器使用您的位置信息</p>
-        <div class="loader"></div>
-    </div>
-    
-    <div id="game-container" style="display:none;">
-        <header>
-            <h1>九龍城土瓜灣探索之旅</h1>
-            <div id="gps-status" class="gps-status">GPS: 搜尋中...</div>
-        </header>
-        
-        <div id="location-info">
-            <h2 id="loc-title">尋找第一個地點</h2>
-            <p id="loc-story">請移動到指定地點開始探索</p>
-            
-            <div id="question-section" style="display:none;">
-                <h3 id="question-text"></h3>
-                <input type="text" id="answer-input" placeholder="輸入您的答案">
-                <div class="button-group">
-                    <button onclick="checkAnswer()">提交答案</button>
-                    <button onclick="showHint()" class="hint-btn">需要靈感？</button>
+    <div class="game-container">
+        <!-- 載入畫面 -->
+        <div id="loading-screen" class="screen active">
+            <div class="loading-content">
+                <h2>🚀 準備開始探索</h2>
+                <div class="loader"></div>
+                <p id="loading-text">初始化遊戲系統...</p>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
                 </div>
             </div>
-            
-            <div id="distance-info">
-                <p>距離下個地點: <span id="distance">-</span> 米</p>
-                <div class="compass">↑</div>
+        </div>
+
+        <!-- 主遊戲畫面 -->
+        <div id="game-screen" class="screen">
+            <header class="game-header">
+                <div class="header-left">
+                    <h1>時光記憶守護者</h1>
+                    <div id="gps-status" class="gps-status searching">
+                        <span class="status-icon">📍</span>
+                        <span class="status-text">搜尋GPS信號...</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="progress-display">
+                        進度: <span id="progress-count">0</span>/<span id="total-locations">8</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="game-main">
+                <!-- 地點信息卡片 -->
+                <div id="location-card" class="location-card hidden">
+                    <div class="card-header">
+                        <h2 id="location-title">地點標題</h2>
+                        <span id="location-distance" class="distance-badge">-- 米</span>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div id="location-story" class="story-section">
+                            <p>這裡將顯示當前地點的歷史故事...</p>
+                        </div>
+                        
+                        <div id="question-section" class="question-section hidden">
+                            <h3>📝 探索問題</h3>
+                            <p id="question-text">請回答以下問題：</p>
+                            
+                            <div class="answer-input">
+                                <input type="text" id="user-answer" placeholder="輸入您的答案...">
+                                <button onclick="submitAnswer()" class="btn primary">提交答案</button>
+                            </div>
+                            
+                            <div class="hint-section">
+                                <button onclick="showHint()" class="btn secondary hint-btn">
+                                    💡 需要提示？
+                                </button>
+                                <div id="hint-content" class="hint-content hidden">
+                                    <p id="hint-text">提示內容將顯示在這裡</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 指引畫面 -->
+                <div id="guidance-screen" class="guidance-screen">
+                    <div class="compass-section">
+                        <div class="compass">
+                            <div class="compass-arrow">↑</div>
+                        </div>
+                        <p id="direction-text">正在尋找最近的地點...</p>
+                    </div>
+                    
+                    <div class="next-location">
+                        <h3>下個目的地</h3>
+                        <p id="next-location-name">--</p>
+                        <p id="next-location-distance">距離: -- 米</p>
+                    </div>
+                </div>
+
+                <!-- 完成地點慶祝 -->
+                <div id="celebration" class="celebration hidden">
+                    <div class="celebration-content">
+                        <h2>🎉 完成探索！</h2>
+                        <p>您成功解開了這個地點的謎題！</p>
+                        <button onclick="closeCelebration()" class="btn primary">繼續探索</button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 除錯信息（開發時使用） -->
+            <div class="debug-panel">
+                <button onclick="toggleDebug()" class="debug-btn">🔧 除錯信息</button>
+                <div id="debug-info" class="debug-info hidden">
+                    <p>當前位置: <span id="debug-position">--</span></p>
+                    <p>最近地點: <span id="debug-nearby">--</span></p>
+                    <p>GPS精度: <span id="debug-accuracy">--</span>米</p>
+                </div>
             </div>
         </div>
-        
-        <div id="progress">
-            <h3>探索進度</h3>
-            <div class="progress-bar">
-                <div id="progress-fill"></div>
-            </div>
-            <p>已完成：<span id="progress-count">0</span> / <span id="total-locations">0</span></p>
-        </div>
-        
-        <div class="debug-panel">
-            <button onclick="toggleDebug()">顯示除錯信息</button>
-            <div id="debug-info" style="display:none;">
-                <p>當前位置: <span id="debug-pos">-</span></p>
-                <p>最近地點: <span id="debug-nearby">-</span></p>
+
+        <!-- GPS錯誤畫面 -->
+        <div id="gps-error-screen" class="screen error-screen hidden">
+            <div class="error-content">
+                <h2>❌ GPS信號問題</h2>
+                <p id="error-message">無法獲取您的位置信息</p>
+                <div class="error-solutions">
+                    <h4>解決方法：</h4>
+                    <ul>
+                        <li>檢查瀏覽器位置權限設定</li>
+                        <li>確保在戶外空曠地方</li>
+                        <li>嘗試刷新頁面</li>
+                        <li>檢查手機GPS是否開啟</li>
+                    </ul>
+                </div>
+                <button onclick="retryGPS()" class="btn primary">重試GPS</button>
+                <button onclick="goToTest()" class="btn secondary">GPS測試頁面</button>
             </div>
         </div>
     </div>
 
+    <script src="js/locations.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>
