@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AR探索遊戲</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="loading">載入中...</div>
+    
+    <div id="game-container" style="display:none;">
+        <div id="location-info">
+            <h2 id="loc-title"></h2>
+            <p id="loc-story"></p>
+            <div id="question-section">
+                <h3 id="question-text"></h3>
+                <input type="text" id="answer-input" placeholder="輸入您的答案">
+                <button onclick="checkAnswer()">提交答案</button>
+                <button onclick="showHint()" class="hint-btn">需要靈感？</button>
+            </div>
+        </div>
+        
+        <div id="ar-container">
+            <!-- AR場景將在這裡載入 -->
+        </div>
+        
+        <div id="progress">
+            <h3>探索進度</h3>
+            <div id="progress-bar"></div>
+            <p>已完成：<span id="progress-count">0</span> / <span id="total-locations">0</span></p>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+    <script src="js/gps-helper.js"></script>
+</body>
+</html>
