@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPS測試頁面</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #map { height: 400px; width: 100%; }
+        .info { padding: 10px; background: #f0f0f0; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>GPS定位測試</h1>
+    
+    <div class="info">
+        <p>當前位置：<span id="current-location">獲取中...</span></p>
+        <p>經度：<span id="longitude">-</span></p>
+        <p>緯度：<span id="latitude">-</span></p>
+        <p>精度：<span id="accuracy">-</span> 米</p>
+    </div>
+    
+    <div id="nearby-locations">
+        <h3>附近測試地點</h3>
+        <div id="locations-list"></div>
+    </div>
+    
+    <button onclick="startGPS()">開始GPS監測</button>
+    <button onclick="stopGPS()">停止GPS監測</button>
+    
+    <script src="js/gps-helper.js"></script>
+    <script>
+        // 測試地點資料
+        const testLocations = [
+            {name: "測試點1", lat: 22.3191, lng: 114.1694, range: 50},
+            {name: "測試點2", lat: 22.3195, lng: 114.1702, range: 50},
+            {name: "測試點3", lat: 22.3200, lng: 114.1710, range: 50}
+        ];
+        
+        // 顯示測試地點
+        function displayTestLocations() {
+            const list = document.getElementById('locations-list');
+            list.innerHTML = '';
+            
+            testLocations.forEach(loc => {
+                const div = document.createElement('div');
+                div.className = 'location-item';
+                div.innerHTML = `
+                    <strong>${loc.name}</strong><br>
+                    座標：${loc.lat}, ${loc.lng}<br>
+                    觸發範圍：${loc.range}米
+                `;
+                list.appendChild(div);
+            });
+        }
+        
+        displayTestLocations();
+    </script>
+</body>
+</html>
