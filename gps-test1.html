@@ -249,6 +249,8 @@ function goNextLocation(){
   updateProgress();
   if(currentLocation<=totalLocations){
     document.getElementById('location-'+currentLocation).style.display='block';
+    // ✅ 重置 GPS 提示，讓新地點可以再次彈出
+    promptShownSet.clear();
   }else{
     completeGame();
   }
