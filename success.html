@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探索完成 - 九龍城土瓜灣AR探索</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .success-container {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .certificate {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            margin: 30px 0;
+            border: 10px solid gold;
+        }
+        
+        .certificate h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .achievement-list {
+            text-align: left;
+            margin: 20px 0;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="certificate">
+            <h1>🎉 探索完成證書</h1>
+            <p>茲證明</p>
+            <h2>時光記憶守護者團隊</h2>
+            <p>成功完成「九龍城土瓜灣AR探索之旅」所有挑戰</p>
+            
+            <div class="achievement-list">
+                <h3>🏆 探索成就</h3>
+                <ul>
+                    <li>✅ 探索6個歷史地點</li>
+                    <li>✅ 解開所有歷史謎題</li>
+                    <li>✅ 收集完整記憶碎片</li>
+                    <li>✅ 成為認證時光守護者</li>
+                </ul>
+            </div>
+            
+            <p>完成日期: <span id="completion-date">2024年1月1日</span></p>
+        </div>
+        
+        <div class="share-buttons">
+            <button class="btn primary" onclick="shareCertificate()">
+                📱 分享證書
+            </button>
+            <button class="btn secondary" onclick="viewWall()">
+                🏆 查看英雄牆
+            </button>
+            <a href="index.html" class="btn secondary">
+                🏠 返回首頁
+            </a>
+        </div>
+        
+        <div class="notice">
+            <p>感謝您參與這次歷史探索之旅！您的支持幫助我們繼續社區文化保育工作。</p>
+        </div>
+    </div>
+
+    <script>
+        // 設置完成日期
+        document.getElementById('completion-date').textContent = new Date().toLocaleDateString('zh-HK');
+        
+        function shareCertificate() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '九龍城土瓜灣探索完成證書',
+                    text: '我剛剛完成了九龍城土瓜灣AR探索之旅！',
+                    url: window.location.href
+                });
+            } else {
+                alert('請手動截圖分享您的完成證書！');
+            }
+        }
+        
+        function viewWall() {
+            alert('英雄牆功能開發中...');
+        }
+    </script>
+</body>
+</html>
