@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPS基礎測試</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+        .success { background: #e6f7e6; border-color: #2ecc71; }
+        .error { background: #ffe6e6; border-color: #e74c3c; }
+        .info { background: #e6f3ff; border-color: #3498db; }
+        button {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .results {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧭 GPS基礎測試</h1>
+    <p>這個頁面只有最基礎的GPS功能，應該能夠正常運行。</p>
+
+    <div class="status info" id="status">
+        請點擊下方"測試GPS"按鈕開始
+    </div>
+
+    <button onclick="testGPS()" id="test-btn">測試GPS</button>
+
+    <div class="results">
+        <h3>位置信息：</h3>
+        <p><strong>緯度：</strong> <span id="latitude">-</span></p>
+        <p><strong>經度：</strong> <span id="longitude">-</span></p>
+        <p><strong>精度：</strong> <span id="accuracy">-</span> 米</p>
+        <p><strong>時間：</strong> <span id="timestamp">-</span></p>
+    </div>
+
+    <div class="status info">
+        <h4>使用說明：</h4>
+        <div class="step">1. 點擊"測試GPS"按鈕</div>
+        <div class="step">2. 允許瀏覽器訪問您的位置</div>
+        <div class="step">3. 等待位置信息顯示</div>
+        <div class="step">4. 如果成功，您將看到經緯度信息</div>
+    </div>
+
+    <script>
+        function testGPS() {
+            const statusEl = document.getElementById('status');
+            const testBtn = document.getElementById('test-btn');
+            
+            // 檢查瀏覽器是否支持GPS
+            if (!navigator.geolocation) {
+                statusEl.textContent = "❌ 您的瀏覽器不支持GPS功能";
+                statusEl.className = "status error";
+                return;
+            }
+
+            statusEl.textContent = "📍 請求位置權限中...";
+            statusEl.className = "status info";
+            testBtn.disabled = true;
+            testBtn.textContent = "獲取位置中...";
+
+            // 使用最簡單的getCurrentPosition而不是watchPosition
+            navigator.geolocation.getCurrentPosition(
+                // 成功回調
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const acc = position.coords.accuracy;
+                    
+                    // 更新顯示
+                    document.getElementById('latitude').textContent = lat.toFixed(6);
+                    document.getElementById('longitude').textContent = lng.toFixed(6);
+                    document.getElementById('accuracy').textContent = Math.round(acc);
+                    document.getElementById('timestamp').textContent = new Date().toLocaleTimeString();
+                    
+                    statusEl.textContent = "✅ GPS測試成功！位置信息已獲取";
+                    statusEl.className = "status success";
+                    testBtn.textContent = "再次測試";
+                    testBtn.disabled = false;
+                },
+                // 錯誤回調
+                function(error) {
+                    let errorMessage = "獲取位置失敗：";
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = "❌ 位置權限被拒絕。請允許瀏覽器訪問您的位置，然後重試。";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = "❌ 無法獲取位置信息。請檢查GPS信號或網絡連接。";
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = "❌ 獲取位置超時。請重試。";
+                            break;
+                        default:
+                            errorMessage = "❌ 未知錯誤：" + error.message;
+                            break;
+                    }
+                    
+                    statusEl.textContent = errorMessage;
+                    statusEl.className = "status error";
+                    testBtn.textContent = "重新測試";
+                    testBtn.disabled = false;
+                },
+                // 選項 - 使用較短超時時間
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000, // 10秒超時
+                    maximumAge: 0
+                }
+            );
+        }
+
+        // 頁面加載時顯示基本信息
+        window.addEventListener('load', function() {
+            const statusEl = document.getElementById('status');
+            if (navigator.geolocation) {
+                statusEl.textContent = "✅ 瀏覽器支持GPS，請點擊測試按鈕開始";
+            } else {
+                statusEl.textContent = "❌ 瀏覽器不支持GPS功能";
+                statusEl.className = "status error";
+            }
+        });
+    </script>
+</body>
+</html>
