@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>免GPS測試版 - 九龍城土瓜灣探索</title>
+    <title>免GPS測試版 - 九龍城土瓜灣探索 (含影片)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -54,6 +54,9 @@
             background: #ffc107;
             color: black;
         }
+        .btn-video {
+            background: #dc3545;
+        }
         input {
             width: 100%;
             padding: 12px;
@@ -76,11 +79,68 @@
             margin: 20px 0;
             font-weight: bold;
         }
+        /* 影片模態框樣式 */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .video-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            height: 0;
+            margin: 20px 0;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+        .close-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .video-description {
+            margin: 15px 0;
+            color: #555;
+            font-style: italic;
+        }
+        .ar-note {
+            background: #e7f3ff;
+            color: #004085;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏛️ 九龍城土瓜灣探索<br><small>免GPS測試版</small></h1>
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>免GPS測試版 (含影片)</small></h1>
         
         <div class="progress">
             進度: <span id="progress">1</span>/6
@@ -90,6 +150,13 @@
         <div id="location-1" class="location-card">
             <h2>📍 九龍寨城公園</h2>
             <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。想像一下，在1987年清拆之前，這裡是高密度建築的迷宮，充滿著各種故事和傳奇。</p>
+            
+            <div class="ar-note">
+                💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容
+            </div>
+            
+            <button class="btn btn-video" onclick="showVideo(1)">🎬 觀看九龍寨城歷史影片</button>
+            
             <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
             <input type="text" id="answer-1" placeholder="輸入您的答案">
             <button class="btn" onclick="checkAnswer(1, '衙門')">提交答案</button>
@@ -100,6 +167,13 @@
         <div id="location-2" class="location-card" style="display:none;">
             <h2>🏢 十三街舊樓群</h2>
             <p><strong>故事:</strong> 十三街見證了土瓜灣的工業發展史。這些戰前騎樓建築融合了中西建築風格，曾經是繁華的商業街道，現在則是社區生活的見證。</p>
+            
+            <div class="ar-note">
+                💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容
+            </div>
+            
+            <button class="btn btn-video" onclick="showVideo(2)">🎬 觀看十三街歷史影片</button>
+            
             <p><strong>問題:</strong> 十三街的騎樓建築主要建於哪個年代？</p>
             <input type="text" id="answer-2" placeholder="輸入您的答案">
             <button class="btn" onclick="checkAnswer(2, '1950')">提交答案</button>
@@ -110,6 +184,13 @@
         <div id="location-3" class="location-card" style="display:none;">
             <h2>🎨 土瓜灣牛棚藝術村</h2>
             <p><strong>故事:</strong> 這裡曾是香港唯一的市區屠宰場，建於1908年。經過活化後，紅磚建築群變成了藝術家的工作室和展覽空間，見證了城市空間功能的轉變。</p>
+            
+            <div class="ar-note">
+                💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容
+            </div>
+            
+            <button class="btn btn-video" onclick="showVideo(3)">🎬 觀看牛棚藝術村影片</button>
+            
             <p><strong>問題:</strong> 牛棚藝術村的前身是什麼建築？</p>
             <input type="text" id="answer-3" placeholder="輸入您的答案">
             <button class="btn" onclick="checkAnswer(3, '屠宰場')">提交答案</button>
@@ -120,6 +201,13 @@
         <div id="location-4" class="location-card" style="display:none;">
             <h2>🌊 海心公園</h2>
             <p><strong>故事:</strong> 海心公園以獨特的魚尾石聞名，這裡曾經是海邊，漁民會在此祈求平安。公園內還有鄭成功石像，訴說著香港與海洋的深厚淵源。</p>
+            
+            <div class="ar-note">
+                💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容
+            </div>
+            
+            <button class="btn btn-video" onclick="showVideo(4)">🎬 觀看海心公園影片</button>
+            
             <p><strong>問題:</strong> 海心公園最著名的自然景觀是什麼石？</p>
             <input type="text" id="answer-4" placeholder="輸入您的答案">
             <button class="btn" onclick="checkAnswer(4, '魚尾石')">提交答案</button>
@@ -130,6 +218,13 @@
         <div id="location-5" class="location-card" style="display:none;">
             <h2>👑 宋皇臺公園</h2>
             <p><strong>故事:</strong> 這裡是南宋最後兩位皇帝逃避元軍的地方。『宋皇臺』石刻見證了香港在中國歷史中的重要地位，是香港最古老的歷史遺跡之一。</p>
+            
+            <div class="ar-note">
+                💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容
+            </div>
+            
+            <button class="btn btn-video" onclick="showVideo(5)">🎬 觀看宋皇臺歷史影片</button>
+            
             <p><strong>問題:</strong> 宋皇臺紀念的是哪個朝代的皇帝？</p>
             <input type="text" id="answer-5" placeholder="輸入您的答案">
             <button class="btn" onclick="checkAnswer(5, '南宋')">提交答案</button>
@@ -140,6 +235,13 @@
         <div id="location-6" class="location-card" style="display:none;">
             <h2>🙏 紅磡觀音廟</h2>
             <p><strong>故事:</strong> 建於1873年的紅磡觀音廟是香港二級歷史建築，見證了紅磡地區的發展。這裡不僅是宗教場所，更是社區凝聚的重要空間。</p>
+            
+            <div class="ar-note">
+                💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容
+            </div>
+            
+            <button class="btn btn-video" onclick="showVideo(6)">🎬 觀看紅磡觀音廟影片</button>
+            
             <p><strong>問題:</strong> 紅磡觀音廟主要供奉哪位神祇？</p>
             <input type="text" id="answer-6" placeholder="輸入您的答案">
             <button class="btn" onclick="checkAnswer(6, '觀音')">提交答案</button>
@@ -165,9 +267,62 @@
         </div>
     </div>
 
+    <!-- 影片模態框 -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-content">
+            <h2 id="video-title">影片標題</h2>
+            <p class="video-description" id="video-description">影片描述將顯示在這裡</p>
+            
+            <div class="video-container">
+                <iframe id="video-player" width="560" height="315" src="" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
+            <p class="ar-note">在AR版本中，這段影片會在您到達地點時自動播放，並與實景結合</p>
+            
+            <button class="close-btn" onclick="closeVideo()">關閉影片</button>
+        </div>
+    </div>
+
     <script>
         let currentLocation = 1;
         const totalLocations = 6;
+        
+        // 每個地點的影片資訊
+        const videoData = {
+            1: {
+                title: "九龍寨城歷史",
+                description: "探索九龍寨城的傳奇歷史，從清代軍事要塞到獨特的城中城社區",
+                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+            },
+            2: {
+                title: "十三街舊樓群故事", 
+                description: "了解十三街戰前騎樓建築的歷史與建築特色",
+                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+            },
+            3: {
+                title: "牛棚藝術村轉型",
+                description: "見證從屠宰場到藝術空間的華麗轉身",
+                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+            },
+            4: {
+                title: "海心公園與魚尾石傳說",
+                description: "探索海心公園的自然景觀與漁民文化",
+                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+            },
+            5: {
+                title: "宋皇臺歷史遺跡",
+                description: "追溯南宋皇室在香港的歷史蹤跡",
+                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+            },
+            6: {
+                title: "紅磡觀音廟文化",
+                description: "了解紅磡觀音廟的建築特色與社區功能",
+                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+            }
+        };
 
         function checkAnswer(locationNum, correctAnswer) {
             const userAnswer = document.getElementById('answer-' + locationNum).value.trim().toLowerCase();
@@ -209,6 +364,31 @@
                 6: '提示：廟宇名稱已經提示了答案'
             };
             alert(hints[locationNum]);
+        }
+
+        function showVideo(locationNum) {
+            const videoInfo = videoData[locationNum];
+            if (!videoInfo) return;
+            
+            // 設置影片標題和描述
+            document.getElementById('video-title').textContent = videoInfo.title;
+            document.getElementById('video-description').textContent = videoInfo.description;
+            
+            // 設置YouTube影片（使用您提供的影片ID）
+            const videoPlayer = document.getElementById('video-player');
+            videoPlayer.src = `https://www.youtube.com/embed/${videoInfo.youtubeId}?autoplay=1`;
+            
+            // 顯示影片模態框
+            document.getElementById('video-modal').style.display = 'flex';
+        }
+
+        function closeVideo() {
+            // 隱藏影片模態框
+            document.getElementById('video-modal').style.display = 'none';
+            
+            // 停止影片播放
+            const videoPlayer = document.getElementById('video-player');
+            videoPlayer.src = '';
         }
 
         function skipToLocation(locationNum) {
@@ -258,6 +438,13 @@
             
             alert('遊戲已重置！');
         }
+        
+        // 點擊影片模態框背景關閉影片
+        document.getElementById('video-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideo();
+            }
+        });
     </script>
 </body>
 </html>
