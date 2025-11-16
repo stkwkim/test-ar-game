@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GPS版本 - 九龍城土瓜灣探索</title>
+    <title>GPS驗證版本 - 九龍城土瓜灣探索</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -62,6 +62,10 @@
         .btn-dev {
             background: #6c757d;
         }
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
         input {
             width: 100%;
             padding: 12px;
@@ -69,6 +73,10 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
+        }
+        input:disabled {
+            background: #e9ecef;
+            cursor: not-allowed;
         }
         .completion {
             background: #d4edda;
@@ -220,6 +228,15 @@
             z-index: 1001;
             display: none;
         }
+        .verification-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -228,7 +245,7 @@
     </div>
 
     <div class="container">
-        <h1>🏛️ 九龍城土瓜灣探索<br><small>GPS版本 (自動播放影片)</small></h1>
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>GPS驗證版本</small></h1>
         
         <div class="gps-status" id="gps-status">
             正在啟動GPS定位...
@@ -259,11 +276,15 @@
                 <button class="btn btn-story" onclick="showVideo(1, 'story')">📖 故事進度</button>
             </div>
             
+            <div class="verification-message" id="verification-message-1">
+                ❌ 您尚未到達九龍寨城公園，無法回答問題
+            </div>
+            
             <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
-            <input type="text" id="answer-1" placeholder="輸入您的答案">
+            <input type="text" id="answer-1" placeholder="請先到達地點以解鎖問題" disabled>
             
             <div class="button-group">
-                <button class="btn" onclick="checkAnswer(1, '衙門')">提交答案</button>
+                <button class="btn" id="submit-1" onclick="checkAnswer(1, '衙門')" disabled>提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(1)">💡 顯示提示 (<span id="hint-count-1">0</span>/3)</button>
             </div>
             
@@ -324,6 +345,7 @@
         const totalLocations = 1;
         let watchId = null;
         let isAtLocation = false;
+        let locationVerified = false;
         
         // 提示計數器
         const hintCounters = {
@@ -392,9 +414,14 @@
             // 如果距離小於觸發半徑，且之前不在位置，則觸發
             if (distance <= TRIGGER_RADIUS && !isAtLocation) {
                 isAtLocation = true;
+                locationVerified = true;
                 unlockLocation();
             } else if (distance > TRIGGER_RADIUS) {
                 isAtLocation = false;
+                // 如果用戶離開位置，重新鎖定問題
+                if (locationVerified) {
+                    lockLocation();
+                }
             }
             
             // 更新GPS狀態顯示
@@ -448,6 +475,17 @@
                 notification.style.display = 'none';
             }, 5000);
             
+            // 更新驗證消息
+            document.getElementById('verification-message-1').innerHTML = 
+                "✅ 您已到達九龍寨城公園！現在可以回答問題";
+            document.getElementById('verification-message-1').style.background = "#d4edda";
+            document.getElementById('verification-message-1').style.color = "#155724";
+            
+            // 啟用輸入框和提交按鈕
+            document.getElementById('answer-1').disabled = false;
+            document.getElementById('answer-1').placeholder = "輸入您的答案";
+            document.getElementById('submit-1').disabled = false;
+            
             // 更新當前位置
             currentLocation = 1;
             
@@ -456,6 +494,21 @@
             
             // 自動播放影片 - 先播放故事影片，然後播放歷史影片
             playStoryVideo();
+        }
+
+        function lockLocation() {
+            // 更新驗證消息
+            document.getElementById('verification-message-1').innerHTML = 
+                "❌ 您已離開九龍寨城公園，無法回答問題";
+            document.getElementById('verification-message-1').style.background = "#fff3cd";
+            document.getElementById('verification-message-1').style.color = "#856404";
+            
+            // 禁用輸入框和提交按鈕
+            document.getElementById('answer-1').disabled = true;
+            document.getElementById('answer-1').placeholder = "請先到達地點以解鎖問題";
+            document.getElementById('submit-1').disabled = true;
+            
+            locationVerified = false;
         }
 
         function playStoryVideo() {
@@ -491,6 +544,12 @@
         }
 
         function checkAnswer(locationNum, correctAnswer) {
+            // 檢查是否在正確位置
+            if (!locationVerified) {
+                alert('❌ 您需要到達九龍寨城公園才能回答問題！');
+                return;
+            }
+            
             const userAnswer = document.getElementById('answer-' + locationNum).value.trim().toLowerCase();
             const correct = correctAnswer.toLowerCase();
             
@@ -578,6 +637,7 @@
             // 重置所有狀態
             currentLocation = 0;
             isAtLocation = false;
+            locationVerified = false;
             
             // 重置提示計數器
             for (let i = 1; i <= totalLocations; i++) {
@@ -586,6 +646,17 @@
                 document.querySelector(`#location-${i} .btn-hint`).disabled = false;
                 document.getElementById('answer-' + i).value = '';
             }
+            
+            // 重置驗證消息
+            document.getElementById('verification-message-1').innerHTML = 
+                "❌ 您尚未到達九龍寨城公園，無法回答問題";
+            document.getElementById('verification-message-1').style.background = "#fff3cd";
+            document.getElementById('verification-message-1').style.color = "#856404";
+            
+            // 禁用輸入框和提交按鈕
+            document.getElementById('answer-1').disabled = true;
+            document.getElementById('answer-1').placeholder = "請先到達地點以解鎖問題";
+            document.getElementById('submit-1').disabled = true;
             
             // 隱藏完成畫面
             document.getElementById('completion').style.display = 'none';
