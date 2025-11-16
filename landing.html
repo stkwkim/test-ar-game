@@ -22,7 +22,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+            font-family: 'Noto Sans TC', 'Microsoft JhengHeui', sans-serif;
         }
         
         body {
@@ -851,15 +851,6 @@
                     <small style="color: var(--text-light);">請為每位參加者填寫姓名和聯絡電話，每人一行</small>
                 </div>
                 <div class="form-group">
-                    <label for="regCase">選擇案件</label>
-                    <select id="regCase" required>
-                        <option value="">請選擇案件</option>
-                        <option value="case1">消失的九龍城寨</option>
-                        <option value="case2">土瓜灣工廈秘聞</option>
-                        <option value="case3">宋皇臺傳說</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label for="regDate">選擇日期</label>
                     <input type="date" id="regDate" required>
                 </div>
@@ -1020,6 +1011,33 @@
             }
         }
         
+        // 发送邮件功能
+        function sendEmail(formData) {
+            const email = 'stkwkim@gmail.com';
+            const subject = '香港城市解謎報名表';
+            
+            // 构建邮件内容
+            let body = '香港城市解謎報名資料：\n\n';
+            body += `主要聯絡人姓名：${formData.name}\n`;
+            body += `手機號碼：${formData.phone}\n`;
+            body += `電子郵件：${formData.email}\n`;
+            body += `參與人數：${formData.participants}\n`;
+            
+            if (formData.otherParticipants) {
+                body += `其他參加者資料：\n${formData.otherParticipants}\n`;
+            }
+            
+            body += `選擇日期：${formData.date}\n`;
+            body += `禮物數量：${formData.participants}份\n\n`;
+            body += `提交時間：${new Date().toLocaleString('zh-HK')}`;
+            
+            // 使用mailto链接
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            // 打开邮件客户端
+            window.location.href = mailtoLink;
+        }
+        
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
             initializeCredentials();
@@ -1081,10 +1099,9 @@
                 const email = document.getElementById('regEmail').value;
                 const participants = document.getElementById('regParticipants').value;
                 const otherParticipants = document.getElementById('otherParticipants').value;
-                const caseSelected = document.getElementById('regCase').value;
                 const date = document.getElementById('regDate').value;
                 
-                if (!name || !phone || !email || !participants || !caseSelected || !date) {
+                if (!name || !phone || !email || !participants || !date) {
                     alert('請填寫所有必填欄位');
                     return;
                 }
@@ -1102,14 +1119,11 @@
                     email: email,
                     participants: participants,
                     otherParticipants: otherParticipants,
-                    case: caseSelected,
-                    date: date,
-                    gifts: participants // 礼物数量等于参与人数
+                    date: date
                 };
                 
-                // 在实际应用中，这里应该发送数据到服务器
-                // 这里我们只是模拟提交
-                console.log('报名数据已提交:', formData);
+                // 发送邮件
+                sendEmail(formData);
                 
                 alert('報名成功！我們將在24小時內與您聯繫確認詳情。');
                 hideRegistrationPage();
