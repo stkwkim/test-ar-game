@@ -17,21 +17,20 @@
         .progress-bar{width:100%;height:20px;background:#e9ecef;border-radius:10px;margin:10px 0;overflow:hidden}
         .progress-fill{height:100%;background:linear-gradient(90deg,#28a745,#20c997);width:0%;transition:width .5s ease}
         .progress-text{display:flex;justify-content:space-between;margin-top:5px}
-        /* ---- 新增：GPS 距離標籤 ---- */
         .distance-badge{background:#e7f3ff;color:#004085;padding:4px 8px;border-radius:4px;font-size:.85em;margin-left:8px}
-        /* ---- 新增：可選影片提示 ---- */
         .gps-prompt{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#333;padding:15px 20px;border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,.3);z-index:9999;display:none}
         .gps-prompt button{margin:0 5px}
-        /* ---- 全屏影片 ---- */
         .gps-video-overlay{position:fixed;inset:0;background:#000;display:none;z-index:9999}
         .gps-video-overlay iframe{width:100%;height:100%;border:none}
+        /* ---- 新增：自拍合成 ---- */
+        .selfie-box{text-align:center;margin-top:10px}
+        .selfie-canvas{display:none}
+        .selfie-img{width:150px;margin-top:10px;border-radius:8px}
     </style>
-<base target="_blank">
 </head>
 <body>
     <div class="container">
-        <h1>🏛️ 九龍城土瓜灣探索<br><small>GPS-可選影片 + 距離提示版</small></h1>
-
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>GPS-可選影片 + 距離提示 + 自拍分享版</small></h1>
         <div class="progress-container">
             <div>探索進度: <span id="progress-count">1</span>/6</div>
             <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -41,11 +40,10 @@
             </div>
         </div>
 
-        <!-- 地點1: 九龍寨城公園 -->
+        <!-- 地點1 -->
         <div id="location-1" class="location-card">
             <h2>📍 九龍寨城公園<span id="dist-1" class="distance-badge">計算中…</span></h2>
             <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。想像一下，在1987年清拆之前，這裡是高密度建築的迷宮，充滿著各種故事和傳奇。</p>
-            <div class="ar-note">💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容</div>
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(1,'history')">🎬 觀看九龍寨城歷史影片</button>
                 <button class="btn btn-story" onclick="showVideo(1,'story')">📖 故事進度</button>
@@ -56,14 +54,17 @@
                 <button class="btn" onclick="checkAnswer(1,'衙門')">提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(1)">💡 顯示提示 (<span id="hint-count-1">0</span>/3)</button>
             </div>
-            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(1)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-1" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-1" class="selfie-img" style="display:none;">
+            </div>
         </div>
 
-        <!-- 地點2: 十三街舊樓群 -->
+        <!-- 地點2 -->
         <div id="location-2" class="location-card" style="display:none">
             <h2>🏢 十三街舊樓群<span id="dist-2" class="distance-badge">計算中…</span></h2>
             <p><strong>故事:</strong> 十三街見證了土瓜灣的工業發展史。這些戰前騎樓建築融合了中西建築風格，曾經是繁華的商業街道，現在則是社區生活的見證。</p>
-            <div class="ar-note">💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容</div>
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(2,'history')">🎬 觀看十三街歷史影片</button>
                 <button class="btn btn-story" onclick="showVideo(2,'story')">📖 故事進度</button>
@@ -74,14 +75,17 @@
                 <button class="btn" onclick="checkAnswer(2,'1950')">提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(2)">💡 顯示提示 (<span id="hint-count-2">0</span>/3)</button>
             </div>
-            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(2)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-2" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-2" class="selfie-img" style="display:none;">
+            </div>
         </div>
 
-        <!-- 地點3: 牛棚藝術村 -->
+        <!-- 地點3 -->
         <div id="location-3" class="location-card" style="display:none">
             <h2>🎨 土瓜灣牛棚藝術村<span id="dist-3" class="distance-badge">計算中…</span></h2>
             <p><strong>故事:</strong> 這裡曾是香港唯一的市區屠宰場，建於1908年。經過活化後，紅磚建築群變成了藝術家的工作室和展覽空間，見證了城市空間功能的轉變。</p>
-            <div class="ar-note">💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容</div>
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(3,'history')">🎬 觀看牛棚藝術村影片</button>
                 <button class="btn btn-story" onclick="showVideo(3,'story')">📖 故事進度</button>
@@ -92,14 +96,17 @@
                 <button class="btn" onclick="checkAnswer(3,'屠宰場')">提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(3)">💡 顯示提示 (<span id="hint-count-3">0</span>/3)</button>
             </div>
-            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(3)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-3" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-3" class="selfie-img" style="display:none;">
+            </div>
         </div>
 
-        <!-- 地點4: 海心公園 -->
+        <!-- 地點4 -->
         <div id="location-4" class="location-card" style="display:none">
             <h2>🌊 海心公園<span id="dist-4" class="distance-badge">計算中…</span></h2>
             <p><strong>故事:</strong> 海心公園以獨特的魚尾石聞名，這裡曾經是海邊，漁民會在此祈求平安。公園內還有鄭成功石像，訴說著香港與海洋的深厚淵源。</p>
-            <div class="ar-note">💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容</div>
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(4,'history')">🎬 觀看海心公園影片</button>
                 <button class="btn btn-story" onclick="showVideo(4,'story')">📖 故事進度</button>
@@ -110,14 +117,17 @@
                 <button class="btn" onclick="checkAnswer(4,'魚尾石')">提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(4)">💡 顯示提示 (<span id="hint-count-4">0</span>/3)</button>
             </div>
-            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(4)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-4" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-4" class="selfie-img" style="display:none;">
+            </div>
         </div>
 
-        <!-- 地點5: 宋皇臺公園 -->
+        <!-- 地點5 -->
         <div id="location-5" class="location-card" style="display:none">
             <h2>👑 宋皇臺公園<span id="dist-5" class="distance-badge">計算中…</span></h2>
             <p><strong>故事:</strong> 這裡是南宋最後兩位皇帝逃避元軍的地方。『宋皇臺』石刻見證了香港在中國歷史中的重要地位，是香港最古老的歷史遺跡之一。</p>
-            <div class="ar-note">💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容</div>
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(5,'history')">🎬 觀看宋皇臺歷史影片</button>
                 <button class="btn btn-story" onclick="showVideo(5,'story')">📖 故事進度</button>
@@ -128,14 +138,17 @@
                 <button class="btn" onclick="checkAnswer(5,'南宋')">提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(5)">💡 顯示提示 (<span id="hint-count-5">0</span>/3)</button>
             </div>
-            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(5)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-5" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-5" class="selfie-img" style="display:none;">
+            </div>
         </div>
 
-        <!-- 地點6: 紅磡觀音廟 -->
+        <!-- 地點6 -->
         <div id="location-6" class="location-card" style="display:none">
             <h2>🙏 紅磡觀音廟<span id="dist-6" class="distance-badge">計算中…</span></h2>
             <p><strong>故事:</strong> 建於1873年的紅磡觀音廟是香港二級歷史建築，見證了紅磡地區的發展。這裡不僅是宗教場所，更是社區凝聚的重要空間。</p>
-            <div class="ar-note">💡 在AR版本中，當您到達此地點時，會自動顯示相關的AR影片內容</div>
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(6,'history')">🎬 觀看紅磡觀音廟影片</button>
                 <button class="btn btn-story" onclick="showVideo(6,'story')">📖 故事進度</button>
@@ -146,10 +159,14 @@
                 <button class="btn" onclick="checkAnswer(6,'觀音')">提交答案</button>
                 <button class="btn btn-hint" onclick="showHint(6)">💡 顯示提示 (<span id="hint-count-6">0</span>/3)</button>
             </div>
-            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(6)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-6" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-6" class="selfie-img" style="display:none;">
+            </div>
         </div>
 
-        <!-- 完成慶祝 -->
+        <!-- 完成頁 -->
         <div id="completion" class="completion">
             <h2>🎉 恭喜您完成所有探索！</h2>
             <p>您已成功完成九龍城土瓜灣的6個歷史地點探索！</p>
@@ -157,6 +174,11 @@
                 <h3>完成獎勵二維碼</h3>
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0168" alt="完成獎勵二維碼">
                 <p class="qr-instruction">掃描此二維碼可獲得數字代碼: 0168</p>
+            </div>
+            <div class="selfie-box">
+                <button class="btn btn-success" onclick="takeSelfie(0)">📸 自拍分享完成任務</button>
+                <canvas id="canvas-0" class="selfie-canvas" width="600" height="600"></canvas>
+                <img id="selfie-0" class="selfie-img" style="display:none;">
             </div>
             <button class="btn btn-success" onclick="resetGame()">重新開始遊戲</button>
         </div>
@@ -190,6 +212,19 @@
     <!-- 全屏影片 -->
     <div id="gpsVideo" class="gps-video-overlay">
         <iframe id="gpsPlayer" allow="autoplay" allowfullscreen></iframe>
+    </div>
+
+    <!-- 原版影片模態框 -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-content">
+            <h2 id="video-title">影片標題</h2>
+            <p class="video-description" id="video-description">影片描述將顯示在這裡</p>
+            <div class="video-container">
+                <iframe id="video-player" width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <p class="ar-note">在AR版本中，這段影片會在您到達地點時自動播放，並與實景結合</p>
+            <button class="close-btn" onclick="closeVideo()">關閉影片</button>
+        </div>
     </div>
 
     <script>
@@ -298,7 +333,7 @@
     }
 
     /* ================= 新增：GPS 距離 & 可選影片 ================= */
-    const HERE = { lat: 22.317212, lng: 114.167039 }; // 你給的座標
+    const HERE = { lat: 22.317212, lng: 114.167039 };
     const POIS = [
         {id:1, name:'九龍寨城公園',  lat:HERE.lat + 0.00080, lng:HERE.lng + 0.00080},
         {id:2, name:'十三街舊樓群', lat:HERE.lat - 0.00090, lng:HERE.lng + 0.00090},
@@ -307,7 +342,7 @@
         {id:5, name:'宋皇臺公園',   lat:HERE.lat + 0.00120, lng:HERE.lng + 0.00120},
         {id:6, name:'紅磡觀音廟',   lat:HERE.lat - 0.00130, lng:HERE.lng + 0.00130}
     ];
-    const VIDEOS = {   // 留位，換成你的 YouTube ID
+    const VIDEOS = {
         1: {story: 'dQw4w9WgXcQ', hist: 'dQw4w9WgXcQ'},
         2: {story: 'AAA',         hist: 'BBB'},
         3: {story: 'CCC',         hist: 'DDD'},
@@ -315,7 +350,7 @@
         5: {story: 'GGG',         hist: 'HHH'},
         6: {story: 'III',         hist: 'JJJ'}
     };
-    const TRIGGER_M = 200;   // 測試半徑，上線改 30
+    const TRIGGER_M = 200;
     const player   = document.getElementById('gpsPlayer');
     const overlay  = document.getElementById('gpsVideo');
     const prompt   = document.getElementById('gpsPrompt');
@@ -362,19 +397,45 @@
         if(navigator.geolocation) watchGPS();
         else alert('裝置不支援 GPS，無法使用距離與影片提示。');
     });
-    </script>
 
-    <!-- 舊影片模態框（保持原樣） -->
-    <div id="video-modal" class="video-modal">
-        <div class="video-content">
-            <h2 id="video-title">影片標題</h2>
-            <p class="video-description" id="video-description">影片描述將顯示在這裡</p>
-            <div class="video-container">
-                <iframe id="video-player" width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <p class="ar-note">在AR版本中，這段影片會在您到達地點時自動播放，並與實景結合</p>
-            <button class="close-btn" onclick="closeVideo()">關閉影片</button>
-        </div>
-    </div>
+    /* ================= 新增：自拍 + WhatsApp 分享 ================= */
+    function takeSelfie(locationNum) {
+        const canvas = document.getElementById('canvas-' + locationNum);
+        const ctx    = canvas.getContext('2d');
+        const img    = document.getElementById('selfie-' + locationNum);
+
+        // 先畫背景與文字
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, 600, 600);
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        const site = locationNum===0 ? '九龍城土瓜灣探索' : POIS.find(p=>p.id===locationNum).name;
+        ctx.fillText('我已完成【'+site+'】任務！', 300, 300);
+
+        // 開相機
+        navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false})
+        .then(stream=>{
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+            video.addEventListener('loadedmetadata',()=>{
+                // 把影像畫到 canvas
+                ctx.drawImage(video, 150, 350, 300, 200);
+                stream.getTracks().forEach(t=>t.stop());
+                const dataURL = canvas.toDataURL('image/jpeg',0.9);
+                img.src = dataURL;
+                img.style.display='block';
+                // 生成 WhatsApp 分享連結
+                const whatsappURL = 'https://wa.me/85266837444?text='+
+                      encodeURIComponent('我已完成【'+site+'】任務！')+
+                      '&media='+encodeURIComponent(dataURL);
+                // 跳 WhatsApp
+                location.href = whatsappURL;
+            });
+        })
+        .catch(err=>{alert('無法開啟相機，請檢查權限。'); console.error(err)});
+    }
+    </script>
 </body>
 </html>
