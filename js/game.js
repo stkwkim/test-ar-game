@@ -5,7 +5,7 @@ const GameState = {
     userPosition: null,
     watchId: null,
     isGPSWorking: false,
-    useTestLocations: false, // 設為true使用測試地點
+    useTestLocations: true, // 設為true使用測試地點,false真實地點
     gameStarted: false
 };
 
