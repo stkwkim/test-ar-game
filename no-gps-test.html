@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>免GPS測試版 - 九龍城土瓜灣探索 (簡化版)</title>
+    <title>免GPS測試版 - 九龍城土瓜灣探索 (隱藏提示版)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -169,20 +169,17 @@
             gap: 10px;
             margin: 10px 0;
         }
-        .correct-answer-note {
-            background: #d1ecf1;
-            color: #0c5460;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            font-size: 0.9em;
-            display: none;
+        .hint-counter {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-top: 5px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏛️ 九龍城土瓜灣探索<br><small>免GPS測試版 (簡化答案)</small></h1>
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>免GPS測試版 (隱藏提示)</small></h1>
         
         <div class="progress-container">
             <div>探索進度: <span id="progress-count">1</span>/6</div>
@@ -213,12 +210,10 @@
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(1, '衙門')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(1)">💡 顯示提示</button>
+                <button class="btn btn-hint" onclick="showHint(1)">💡 顯示提示 (<span id="hint-count-1">0</span>/3)</button>
             </div>
             
-            <div id="correct-answer-1" class="correct-answer-note">
-                💡 正確答案提示: 衙門 (如果您卡關了，可以使用此答案繼續)
-            </div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 地點2: 十三街舊樓群 -->
@@ -239,12 +234,10 @@
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(2, '1950')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(2)">💡 顯示提示</button>
+                <button class="btn btn-hint" onclick="showHint(2)">💡 顯示提示 (<span id="hint-count-2">0</span>/3)</button>
             </div>
             
-            <div id="correct-answer-2" class="correct-answer-note">
-                💡 正確答案提示: 1950 (如果您卡關了，可以使用此答案繼續)
-            </div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 地點3: 土瓜灣牛棚藝術村 -->
@@ -265,12 +258,10 @@
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(3, '屠宰場')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(3)">💡 顯示提示</button>
+                <button class="btn btn-hint" onclick="showHint(3)">💡 顯示提示 (<span id="hint-count-3">0</span>/3)</button>
             </div>
             
-            <div id="correct-answer-3" class="correct-answer-note">
-                💡 正確答案提示: 屠宰場 (如果您卡關了，可以使用此答案繼續)
-            </div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 地點4: 海心公園 -->
@@ -291,12 +282,10 @@
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(4, '魚尾石')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(4)">💡 顯示提示</button>
+                <button class="btn btn-hint" onclick="showHint(4)">💡 顯示提示 (<span id="hint-count-4">0</span>/3)</button>
             </div>
             
-            <div id="correct-answer-4" class="correct-answer-note">
-                💡 正確答案提示: 魚尾石 (如果您卡關了，可以使用此答案繼續)
-            </div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 地點5: 宋皇臺公園 -->
@@ -317,12 +306,10 @@
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(5, '南宋')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(5)">💡 顯示提示</button>
+                <button class="btn btn-hint" onclick="showHint(5)">💡 顯示提示 (<span id="hint-count-5">0</span>/3)</button>
             </div>
             
-            <div id="correct-answer-5" class="correct-answer-note">
-                💡 正確答案提示: 南宋 (如果您卡關了，可以使用此答案繼續)
-            </div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 地點6: 紅磡觀音廟 -->
@@ -343,12 +330,10 @@
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(6, '觀音')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(6)">💡 顯示提示</button>
+                <button class="btn btn-hint" onclick="showHint(6)">💡 顯示提示 (<span id="hint-count-6">0</span>/3)</button>
             </div>
             
-            <div id="correct-answer-6" class="correct-answer-note">
-                💡 正確答案提示: 觀音 (如果您卡關了，可以使用此答案繼續)
-            </div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 完成慶祝 -->
@@ -370,15 +355,6 @@
                 <button class="btn btn-dev" onclick="skipToLocation(5)">地點5</button>
                 <button class="btn btn-dev" onclick="skipToLocation(6)">地點6</button>
                 <button class="btn btn-success" onclick="completeGame()">直接完成遊戲</button>
-            </div>
-            <p>顯示正確答案提示：</p>
-            <div class="button-group">
-                <button class="btn btn-dev" onclick="toggleAnswer(1)">地點1答案</button>
-                <button class="btn btn-dev" onclick="toggleAnswer(2)">地點2答案</button>
-                <button class="btn btn-dev" onclick="toggleAnswer(3)">地點3答案</button>
-                <button class="btn btn-dev" onclick="toggleAnswer(4)">地點4答案</button>
-                <button class="btn btn-dev" onclick="toggleAnswer(5)">地點5答案</button>
-                <button class="btn btn-dev" onclick="toggleAnswer(6)">地點6答案</button>
             </div>
         </div>
     </div>
@@ -405,6 +381,16 @@
     <script>
         let currentLocation = 1;
         const totalLocations = 6;
+        
+        // 每個地點的提示計數器
+        const hintCounters = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0
+        };
         
         // 每個地點的影片資訊
         const videoData = {
@@ -490,15 +476,57 @@
         }
 
         function showHint(locationNum) {
+            // 增加提示計數
+            hintCounters[locationNum]++;
+            
+            // 更新提示按鈕上的計數
+            document.getElementById('hint-count-' + locationNum).textContent = hintCounters[locationNum];
+            
+            // 根據提示次數顯示不同的提示
+            const hintLevel = Math.min(hintCounters[locationNum], 3);
+            
             const hints = {
-                1: '提示：答案就在問題中！留意「衙門」這個詞。',
-                2: '提示：想想香港戰後重建的時期，答案是四位數字。', 
-                3: '提示：這個地方原本的用途與「牛」有關，答案是三個字。',
-                4: '提示：答案就在問題中！是一種與海洋生物有關的石頭。',
-                5: '提示：想想中國歷史中南北宋的時期，答案是兩個字。',
-                6: '提示：答案就在廟宇名稱中！'
+                1: {
+                    1: '提示：答案就在問題中！留意「衙門」這個詞。',
+                    2: '提示：清代衙門的重要建築結構就是「衙門」本身。',
+                    3: '答案：衙門'
+                },
+                2: {
+                    1: '提示：想想香港戰後重建的時期，答案是四位數字。',
+                    2: '提示：1950年代是香港戰後重建的重要時期。',
+                    3: '答案：1950'
+                },
+                3: {
+                    1: '提示：這個地方原本的用途與「牛」有關，答案是三個字。',
+                    2: '提示：這裡原本是處理牛隻的地方。',
+                    3: '答案：屠宰場'
+                },
+                4: {
+                    1: '提示：答案就在問題中！是一種與海洋生物有關的石頭。',
+                    2: '提示：這種石頭形狀像魚的尾巴。',
+                    3: '答案：魚尾石'
+                },
+                5: {
+                    1: '提示：想想中國歷史中南北宋的時期，答案是兩個字。',
+                    2: '提示：南宋是宋朝的後期階段。',
+                    3: '答案：南宋'
+                },
+                6: {
+                    1: '提示：答案就在廟宇名稱中！',
+                    2: '提示：觀音廟主要供奉的就是觀音菩薩。',
+                    3: '答案：觀音'
+                }
             };
-            alert(hints[locationNum]);
+            
+            alert(hints[locationNum][hintLevel]);
+            
+            // 如果已經顯示了答案，重置提示計數器
+            if (hintLevel === 3) {
+                setTimeout(() => {
+                    hintCounters[locationNum] = 0;
+                    document.getElementById('hint-count-' + locationNum).textContent = '0';
+                }, 2000);
+            }
         }
 
         function showVideo(locationNum) {
@@ -570,7 +598,9 @@
             // 清空所有答案
             for (let i = 1; i <= totalLocations; i++) {
                 document.getElementById('answer-' + i).value = '';
-                document.getElementById('correct-answer-' + i).style.display = 'none';
+                // 重置提示計數器
+                hintCounters[i] = 0;
+                document.getElementById('hint-count-' + i).textContent = '0';
             }
             
             alert('遊戲已重置！');
@@ -590,15 +620,6 @@
             
             // 更新進度條
             document.getElementById('progress-fill').style.width = progressPercent + '%';
-        }
-        
-        function toggleAnswer(locationNum) {
-            const answerElement = document.getElementById('correct-answer-' + locationNum);
-            if (answerElement.style.display === 'block') {
-                answerElement.style.display = 'none';
-            } else {
-                answerElement.style.display = 'block';
-            }
         }
         
         // 點擊影片模態框背景關閉影片
