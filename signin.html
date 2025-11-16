@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>城市解謎遊戲 - 登入</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin: -30px -30px 30px -30px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 117, 252, 0.3);
+        }
+        
+        .help-text {
+            margin-top: 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            header {
+                padding: 20px;
+                margin: -20px -20px 20px -20px;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>城市解謎遊戲</h1>
+            <p class="subtitle">請輸入您的登入碼</p>
+        </header>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-code">登入碼</label>
+                <input type="text" id="login-code" name="login-code" required placeholder="請輸入您的專屬登入碼">
+            </div>
+            
+            <div id="error-message" class="error">登入碼錯誤，請重新輸入</div>
+            
+            <button type="submit" class="btn">開始遊戲</button>
+        </form>
+        
+        <div class="help-text">
+            <p>還沒有登入碼？<br>請先完成<a href="payment-instructions.html">報名與付款流程</a></p>
+            <p>如有問題，請 WhatsApp 聯絡我們：<strong>+852 1234 5678</strong></p>
+        </div>
+        
+        <footer>
+            <p>城市解謎遊戲 &copy; 2023 版權所有</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const loginCode = document.getElementById('login-code').value;
+            
+            // 這裡可以添加登入碼驗證邏輯
+            // 由於沒有後端，我們使用簡單的演示邏輯
+            if (loginCode.length > 0) {
+                // 登入成功，跳轉到遊戲頁面
+                window.location.href = 'game.html?code=' + encodeURIComponent(loginCode);
+            } else {
+                // 顯示錯誤訊息
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
