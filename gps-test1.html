@@ -1,50 +1,247 @@
-<!-- ✅ 只需把下面整段 <script> 替換掉你原來的即可 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>九龍城土瓜灣探索（詩意過場版）</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{font-family:Arial,sans-serif;padding:20px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:white}
+        .container{max-width:600px;margin:0 auto;background:white;color:#333;padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+        h1{text-align:center;color:#667eea;margin-bottom:30px}
+        .location-card{background:#f8f9fa;padding:20px;border-radius:10px;margin:20px 0;border-left:5px solid #667eea}
+        .btn{background:#667eea;color:white;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-size:16px;margin:5px}
+        .btn:hover{background:#5a6fd8}.btn-success{background:#28a745}.btn-hint{background:#ffc107;color:black}.btn-video{background:#dc3545}.btn-story{background:#17a2b8}
+        input{width:100%;padding:12px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:16px}
+        .completion{background:#d4edda;color:#155724;padding:30px;border-radius:10px;text-align:center;margin:20px 0;display:none}
+        .progress-container{text-align:center;margin:20px 0;font-weight:bold}
+        .progress-bar{width:100%;height:20px;background:#e9ecef;border-radius:10px;margin:10px 0;overflow:hidden}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#28a745,#20c997);width:0%;transition:width .5s ease}
+        .progress-text{display:flex;justify-content:space-between;margin-top:5px}
+        .distance-badge{background:#e7f3ff;color:#004085;padding:4px 8px;border-radius:4px;font-size:.85em;margin-left:8px}
+        .gps-prompt{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#333;padding:15px 20px;border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,.3);z-index:9999;display:none}
+        .gps-video-overlay{position:fixed;inset:0;background:#000;display:none;z-index:9999}
+        .gps-video-overlay iframe{width:100%;height:100%;border:none}
+        /* ---- 自拍 ---- */
+        .selfie-box{text-align:center;margin-top:10px}
+        .selfie-canvas{display:none}
+        .selfie-img{width:150px;margin-top:10px;border-radius:8px}
+        /* ---- 詩意過場 ---- */
+        .poem-mask{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.6rem;text-align:center;padding:2rem;z-index:9999}
+    </style>
+<base target="_blank">
+</head>
+<body>
+<div class="container">
+    <h1>🏛️ 九龍城土瓜灣探索<br><small>詩意 GPS 版</small></h1>
+    <div class="progress-container">
+        <div>探索進度: <span id="progress-count">0</span>/6</div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-text">
+            <span>已完成: <span id="progress-percent">0</span>%</span>
+            <span>剩餘: <span id="remaining-percent">100</span>%</span>
+        </div>
+    </div>
+
+    <!-- ===== 題目 1 ===== -->
+    <div id="location-1" class="location-card">
+        <h2>📍 九龍寨城公園<span id="dist-1" class="distance-badge">計算中…</span></h2>
+        <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。</p>
+        <div class="button-group">
+            <button class="btn btn-video" onclick="showVideo(1,'history')">🎬 歷史影片</button>
+            <button class="btn btn-story" onclick="showVideo(1,'story')">📖 故事進度</button>
+        </div>
+        <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
+        <input type="text" id="answer-1" placeholder="輸入您的答案">
+        <div class="button-group">
+            <button class="btn" onclick="checkAnswer(1,'衙門')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(1)">💡 提示 (<span id="hint-count-1">0</span>/3)</button>
+        </div>
+        <div class="selfie-box">
+            <button class="btn btn-success" onclick="takeSelfie(1)">📸 自拍分享</button>
+            <canvas id="canvas-1" class="selfie-canvas" width="600" height="600"></canvas>
+            <img id="selfie-1" class="selfie-img" style="display:none;">
+        </div>
+    </div>
+
+    <!-- ===== 題目 2 ===== -->
+    <div id="location-2" class="location-card" style="display:none">
+        <h2>🏢 十三街舊樓群<span id="dist-2" class="distance-badge">計算中…</span></h2>
+        <p><strong>故事:</strong> 十三街見證了土瓜灣的工業發展史，戰前騎樓融合中西風格。</p>
+        <div class="button-group">
+            <button class="btn btn-video" onclick="showVideo(2,'history')">🎬 歷史影片</button>
+            <button class="btn btn-story" onclick="showVideo(2,'story')">📖 故事進度</button>
+        </div>
+        <p><strong>問題:</strong> 十三街的騎樓建築主要建於哪個年代？（四位數字）</p>
+        <input type="text" id="answer-2" placeholder="輸入您的答案">
+        <div class="button-group">
+            <button class="btn" onclick="checkAnswer(2,'1950')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(2)">💡 提示 (<span id="hint-count-2">0</span>/3)</button>
+        </div>
+        <div class="selfie-box">
+            <button class="btn btn-success" onclick="takeSelfie(2)">📸 自拍分享</button>
+            <canvas id="canvas-2" class="selfie-canvas" width="600" height="600"></canvas>
+            <img id="selfie-2" class="selfie-img" style="display:none;">
+        </div>
+    </div>
+
+    <!-- ===== 題目 3 ===== -->
+    <div id="location-3" class="location-card" style="display:none">
+        <h2>🎨 牛棚藝術村<span id="dist-3" class="distance-badge">計算中…</span></h2>
+        <p><strong>故事:</strong> 1908 年建成的市區屠宰場，活化後成為藝術家工作室與展場。</p>
+        <div class="button-group">
+            <button class="btn btn-video" onclick="showVideo(3,'history')">🎬 歷史影片</button>
+            <button class="btn btn-story" onclick="showVideo(3,'story')">📖 故事進度</button>
+        </div>
+        <p><strong>問題:</strong> 牛棚藝術村的前身是什麼建築？（三個字）</p>
+        <input type="text" id="answer-3" placeholder="輸入您的答案">
+        <div class="button-group">
+            <button class="btn" onclick="checkAnswer(3,'屠宰場')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(3)">💡 提示 (<span id="hint-count-3">0</span>/3)</button>
+        </div>
+        <div class="selfie-box">
+            <button class="btn btn-success" onclick="takeSelfie(3)">📸 自拍分享</button>
+            <canvas id="canvas-3" class="selfie-canvas" width="600" height="600"></canvas>
+            <img id="selfie-3" class="selfie-img" style="display:none;">
+        </div>
+    </div>
+
+    <!-- ===== 題目 4 ===== -->
+    <div id="location-4" class="location-card" style="display:none">
+        <h2>🌊 海心公園<span id="dist-4" class="distance-badge">計算中…</span></h2>
+        <p><strong>故事:</strong> 以魚尾石聞名，從前漁民在此祈求平安，園內有鄭成功石像。</p>
+        <div class="button-group">
+            <button class="btn btn-video" onclick="showVideo(4,'history')">🎬 歷史影片</button>
+            <button class="btn btn-story" onclick="showVideo(4,'story')">📖 故事進度</button>
+        </div>
+        <p><strong>問題:</strong> 海心公園最著名的自然景觀是什麼石？</p>
+        <input type="text" id="answer-4" placeholder="輸入您的答案">
+        <div class="button-group">
+            <button class="btn" onclick="checkAnswer(4,'魚尾石')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(4)">💡 提示 (<span id="hint-count-4">0</span>/3)</button>
+        </div>
+        <div class="selfie-box">
+            <button class="btn btn-success" onclick="takeSelfie(4)">📸 自拍分享</button>
+            <canvas id="canvas-4" class="selfie-canvas" width="600" height="600"></canvas>
+            <img id="selfie-4" class="selfie-img" style="display:none;">
+        </div>
+    </div>
+
+    <!-- ===== 題目 5 ===== -->
+    <div id="location-5" class="location-card" style="display:none">
+        <h2>👑 宋皇臺公園<span id="dist-5" class="distance-badge">計算中…</span></h2>
+        <p><strong>故事:</strong> 南宋最後兩位皇帝逃避元軍之地，「宋皇臺」石刻見證香港古今。</p>
+        <div class="button-group">
+            <button class="btn btn-video" onclick="showVideo(5,'history')">🎬 歷史影片</button>
+            <button class="btn btn-story" onclick="showVideo(5,'story')">📖 故事進度</button>
+        </div>
+        <p><strong>問題:</strong> 宋皇臺紀念的是哪個朝代的皇帝？（兩個字）</p>
+        <input type="text" id="answer-5" placeholder="輸入您的答案">
+        <div class="button-group">
+            <button class="btn" onclick="checkAnswer(5,'南宋')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(5)">💡 提示 (<span id="hint-count-5">0</span>/3)</button>
+        </div>
+        <div class="selfie-box">
+            <button class="btn btn-success" onclick="takeSelfie(5)">📸 自拍分享</button>
+            <canvas id="canvas-5" class="selfie-canvas" width="600" height="600"></canvas>
+            <img id="selfie-5" class="selfie-img" style="display:none;">
+        </div>
+    </div>
+
+    <!-- ===== 題目 6 ===== -->
+    <div id="location-6" class="location-card" style="display:none">
+        <h2>🙏 紅磡觀音廟<span id="dist-6" class="distance-badge">計算中…</span></h2>
+        <p><strong>故事:</strong> 1873 年建成的香港二級歷史建築，社區信仰與凝聚核心。</p>
+        <div class="button-group">
+            <button class="btn btn-video" onclick="showVideo(6,'history')">🎬 歷史影片</button>
+            <button class="btn btn-story" onclick="showVideo(6,'story')">📖 故事進度</button>
+        </div>
+        <p><strong>問題:</strong> 紅磡觀音廟主要供奉哪位神祇？</p>
+        <input type="text" id="answer-6" placeholder="輸入您的答案">
+        <div class="button-group">
+            <button class="btn" onclick="checkAnswer(6,'觀音')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(6)">💡 提示 (<span id="hint-count-6">0</span>/3)</button>
+        </div>
+        <div class="selfie-box">
+            <button class="btn btn-success" onclick="takeSelfie(6)">📸 自拍分享</button>
+            <canvas id="canvas-6" class="selfie-canvas" width="600" height="600"></canvas>
+            <img id="selfie-6" class="selfie-img" style="display:none;">
+        </div>
+    </div>
+
+    <!-- ===== 完成頁 ===== -->
+    <div id="completion" class="completion">
+        <h2>🎉 恭喜您完成所有探索！</h2>
+        <p>您已成功完成九龍城土瓜灣的 6 個歷史地點探索！</p>
+        <div class="qr-code">
+            <h3>完成獎勵二維碼</h3>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" alt="完成獎勵二維碼">
+            <p class="qr-instruction">掃描此二維碼可獲得數字代碼</p>
+        </div>
+        <div class="selfie-box">
+            <button class="btn btn-success" onclick="takeSelfie(0)">📸 自拍分享完成任務</button>
+            <canvas id="canvas-0" class="selfie-canvas" width="600" height="600"></canvas>
+            <img id="selfie-0" class="selfie-img" style="display:none;">
+        </div>
+        <button class="btn btn-success" onclick="resetGame()">重新開始遊戲</button>
+    </div>
+</div>
+
+<!-- ===== 影片模態框 / GPS 浮框 / 全屏影片 維持原樣 ===== -->
+<div id="video-modal" class="video-modal">
+    <div class="video-content">
+        <h2 id="video-title">影片標題</h2>
+        <p class="video-description" id="video-description">影片描述將顯示在這裡</p>
+        <div class="video-container"><iframe id="video-player" width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <p class="ar-note">在AR版本中，這段影片會在您到達地點時自動播放，並與實景結合</p>
+        <button class="close-btn" onclick="closeVideo()">關閉影片</button>
+    </div>
+</div>
+<div id="gpsPrompt" class="gps-prompt"><div>📍 你已到達 <strong id="promptPoiName"></strong>！</div><div style="margin-top:8px"><button class="btn btn-story" onclick="playSelected('story')">播放故事進度</button><button class="btn btn-video" onclick="playSelected('hist')">播放歷史片段</button><button class="btn" onclick="closePrompt()">稍後再說</button></div></div>
+<div id="gpsVideo" class="gps-video-overlay"><iframe id="gpsPlayer" allow="autoplay" allowfullscreen></iframe></div>
+
 <script>
-/* ================= 原版邏輯（僅加詩意過場） ================= */
+/* ===================== 核心流程 ===================== */
 let currentLocation = 1;
 const totalLocations = 6;
 const hintCounters = {1:0,2:0,3:0,4:0,5:0,6:0};
 
-/* ---- 詩意提示池 ---- */
-const poemLines = [
-  "風吹過舊城磚，腳步引著故事蔓延。",
-  "下一頁，磚瓦將低語；向前行，歲月會回應。",
-  "石階藏著遠去的腳聲，等你去輕輕喚醒。",
-  "轉角的光，替歷史點燈；你的影子，成為導航。",
-  "時間的縫隙在下一個門環，推開便是回聲。"
-];
+/* ---- 下一地點詩意提示 ---- */
+const nextPoem = {
+  2:'磚瓦疊疊，歲月斑斑；下一頁，騎樓將把舊夢翻響。',
+  3:'鐵閘背後，曾經牛聲低迴；紅磚待你，續寫藝術新章。',
+  4:'海風輕拂，魚尾石仍守望；浪花要把下一段故事交到你手上。',
+  5:'宋室遺痕，苔蘚生香；踏過石刻，再聽一段皇室風霜。',
+  6:'香火繚繞，觀音低眉；廟簷下的風鈴，正為你作響。'
+};
 
-/* ---- 公用函式 ---- */
-function randPoem(){
-  return poemLines[Math.floor(Math.random()*poemLines.length)];
+/* ---- 共用函式 ---- */
+function updateProgress(){
+  const pc = Math.min(((currentLocation-1)/totalLocations)*100,100);
+  document.getElementById('progress-count').textContent = currentLocation-1;
+  document.getElementById('progress-percent').textContent = Math.round(pc);
+  document.getElementById('remaining-percent').textContent = Math.round(100-pc);
+  document.getElementById('progress-fill').style.width = pc + '%';
 }
 
 function showPoemThenNext(){
   // 隱藏目前題目
   document.getElementById('location-'+currentLocation).style.display='none';
-
-  // 建立詩意過場畫面
+  // 建立詩意過場
   const wrap = document.createElement('div');
   wrap.id = 'poem-mask';
+  wrap.className = 'poem-mask';
+  const nextName = ['','十三街舊樓群','牛棚藝術村','海心公園','宋皇臺公園','紅磡觀音廟'][currentLocation];
   wrap.innerHTML = `
-    <div style="
-      position:fixed; inset:0; background:rgba(0,0,0,.75);
-      display:flex; align-items:center; justify-content:center;
-      color:#fff; font-size:1.6rem; text-align:center;
-      padding:2rem; z-index:9999;">
-      <div>
-        <p style="margin:0 0 2rem 0; letter-spacing:1px;">${randPoem()}</p>
-        <button class="btn btn-success" onclick="goNextLocation()">出發下一地點</button>
-      </div>
+    <div>
+      <p style="margin:0 0 2rem 0; letter-spacing:1px;">${nextPoem[currentLocation+1]||''}</p>
+      <button class="btn btn-success" onclick="goNextLocation()">前往【${nextName}】</button>
     </div>`;
   document.body.appendChild(wrap);
 }
 
 function goNextLocation(){
-  // 移除詩意畫面
   const mask = document.getElementById('poem-mask');
   if(mask) mask.remove();
-
   currentLocation++;
   updateProgress();
   if(currentLocation<=totalLocations){
@@ -54,24 +251,20 @@ function goNextLocation(){
   }
 }
 
-/* ---- 問答核心（僅改這裡的流向） ---- */
 function checkAnswer(locationNum,correctAnswer){
   const userAnswer=document.getElementById('answer-'+locationNum).value.trim().toLowerCase();
   const correct=correctAnswer.toLowerCase();
-  let isCorrect=false;
-  if(userAnswer===correct||userAnswer.includes(correct)||correct.includes(userAnswer)) isCorrect=true;
-  if(correct==='1950'&&(userAnswer==='50年代'||userAnswer==='五十年代')) isCorrect=true;
-
-  if(isCorrect){
-    // 清空輸入框
+  let ok=false;
+  if(userAnswer===correct||userAnswer.includes(correct)||correct.includes(userAnswer)) ok=true;
+  if(correct==='1950'&&(userAnswer==='50年代'||userAnswer==='五十年代')) ok=true;
+  if(ok){
     document.getElementById('answer-'+locationNum).value='';
     showPoemThenNext();
   }else{
-    alert('❌ 答案不正確，請再試一次或查看提示。\n\n提示：答案通常是1-3個字的關鍵詞。');
+    alert('❌ 答案不正確，請再試一次或查看提示。');
   }
 }
 
-/* ---- 其餘函式保持不變 ---- */
 function showHint(locationNum){
   hintCounters[locationNum]++;
   document.getElementById('hint-count-'+locationNum).textContent=hintCounters[locationNum];
@@ -89,12 +282,122 @@ function showHint(locationNum){
   }
 }
 
-function showVideo(locationNum,type){/* 原內容不變 */}
-function closeVideo(){/* 原內容不變 */}
-function updateProgress(){/* 原內容不變 */}
-function completeGame(){/* 原內容不變 */}
-function resetGame(){/* 原內容不變 */}
+/* ---- 影片相關 ---- */
+function showVideo(locationNum,type){
+  const videoInfo={
+    1:{history:{title:'九龍寨城歷史',youtubeId:'dQw4w9WgXcQ'},story:{title:'九龍寨城故事進度',youtubeId:'dQw4w9WgXcQ'}},
+    2:{history:{title:'十三街舊樓群故事',youtubeId:'dQw4w9WgXcQ'},story:{title:'十三街發展故事',youtubeId:'dQw4w9WgXcQ'}},
+    3:{history:{title:'牛棚藝術村轉型',youtubeId:'dQw4w9WgXcQ'},story:{title:'牛棚藝術村故事',youtubeId:'dQw4w9WgXcQ'}},
+    4:{history:{title:'海心公園與魚尾石傳說',youtubeId:'dQw4w9WgXcQ'},story:{title:'海心公園故事',youtubeId:'dQw4w9WgXcQ'}},
+    5:{history:{title:'宋皇臺歷史遺跡',youtubeId:'dQw4w9WgXcQ'},story:{title:'宋皇臺故事',youtubeId:'dQw4w9WgXcQ'}},
+    6:{history:{title:'紅磡觀音廟文化',youtubeId:'dQw4w9WgXcQ'},story:{title:'紅磡觀音廟故事',youtubeId:'dQw4w9WgXcQ'}}
+  };
+  const info=videoInfo[locationNum][type];
+  document.getElementById('video-title').textContent=info.title;
+  document.getElementById('video-description').textContent=info.title;
+  document.getElementById('video-player').src=`https://www.youtube.com/embed/${info.youtubeId}?autoplay=1&rel=0`;
+  document.getElementById('video-modal').style.display='flex';
+}
+function closeVideo(){
+  document.getElementById('video-modal').style.display='none';
+  document.getElementById('video-player').src='';
+}
 
-/* ================= GPS / 自拍 等其餘腳本保持原樣 ================= */
-/* …下方接你原本的 GPS、自拍、WhatsApp 分享程式碼即可… */
+function completeGame(){
+  for(let i=1;i<=totalLocations;i++) document.getElementById('location-'+i).style.display='none';
+  document.getElementById('completion').style.display='block';
+  updateProgress();
+}
+function resetGame(){
+  for(let i=2;i<=totalLocations;i++) document.getElementById('location-'+i).style.display='none';
+  document.getElementById('completion').style.display='none';
+  document.getElementById('location-1').style.display='block';
+  currentLocation=1;
+  updateProgress();
+  for(let i=1;i<=totalLocations;i++){
+    document.getElementById('answer-'+i).value='';
+    hintCounters[i]=0;
+    document.getElementById('hint-count-'+i).textContent='0';
+  }
+}
+
+/* ================= GPS 距離 & 自拍 維持原樣 ================= */
+const HERE = { lat: 22.317212, lng: 114.167039 };
+const POIS = [
+  {id:1, name:'九龍寨城公園',  lat:HERE.lat + 0.00080, lng:HERE.lng + 0.00080},
+  {id:2, name:'十三街舊樓群', lat:HERE.lat - 0.00090, lng:HERE.lng + 0.00090},
+  {id:3, name:'牛棚藝術村',   lat:HERE.lat + 0.00100, lng:HERE.lng - 0.00070},
+  {id:4, name:'海心公園',     lat:HERE.lat - 0.00110, lng:HERE.lng - 0.00060},
+  {id:5, name:'宋皇臺公園',   lat:HERE.lat + 0.00120, lng:HERE.lng + 0.00120},
+  {id:6, name:'紅磡觀音廟',   lat:HERE.lat - 0.00130, lng:HERE.lng + 0.00130}
+];
+const VIDEOS={1:{story:'dQw4w9WgXcQ',hist:'dQw4w9WgXcQ'},2:{story:'AAA',hist:'BBB'},3:{story:'CCC',hist:'DDD'},4:{story:'EEE',hist:'FFF'},5:{story:'GGG',hist:'HHH'},6:{story:'III',hist:'JJJ'}};
+const TRIGGER_M = 200;
+const player  = document.getElementById('gpsPlayer');
+const overlay = document.getElementById('gpsVideo');
+const prompt  = document.getElementById('gpsPrompt');
+let promptShownSet = new Set();
+function dist(a,b){
+  const R=6371000, toRad=d=>d*Math.PI/180, dLat=toRad(b.lat-a.lat), dLng=toRad(b.lng-a.lng);
+  const la1=toRad(a.lat), la2=toRad(b.lat);
+  return 2*R*Math.asin(Math.sqrt(Math.sin(dLat/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)**2));
+}
+function closePrompt(){ prompt.style.display='none'; }
+function playSelected(type){
+  const id=Number(prompt.dataset.poiId);
+  overlay.style.display='block';
+  player.src=`https://www.youtube.com/embed/${VIDEOS[id][type]}?autoplay=1&rel=0`;
+  closePrompt();
+  setTimeout(()=>{ overlay.style.display='none'; player.src=''; },20000);
+}
+function watchGPS(){
+  navigator.geolocation.watchPosition(
+    pos=>{
+      const here={lat:pos.coords.latitude, lng:pos.coords.longitude};
+      POIS.forEach(p=>{
+        const d=Math.round(dist(here,p));
+        const badge=document.getElementById('dist-'+p.id);
+        if(badge) badge.textContent=d<1000?d+' m':(d/1000).toFixed(1)+' km';
+        if(d<TRIGGER_M && !promptShownSet.has(p.id)){
+          promptShownSet.add(p.id);
+          prompt.dataset.poiId=p.id;
+          document.getElementById('promptPoiName').textContent=p.name;
+          prompt.style.display='block';
+        }
+      });
+    },
+    err=>console.warn('GPS 錯誤:',err),
+    {enableHighAccuracy:true, maximumAge:5000}
+  );
+}
+window.addEventListener('load',()=>{
+  if(navigator.geolocation) watchGPS();
+  else alert('裝置不支援 GPS，無法使用距離與影片提示。');
+  updateProgress();
+});
+
+/* ---- 自拍維持原樣 ---- */
+function takeSelfie(locationNum){
+  const canvas=document.getElementById('canvas-'+locationNum);
+  const ctx=canvas.getContext('2d');
+  const img=document.getElementById('selfie-'+locationNum);
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,600,600);
+  ctx.fillStyle='#000000'; ctx.font='bold 48px Arial'; ctx.textAlign='center';
+  const site=locationNum===0?'九龍城土瓜灣探索':POIS.find(p=>p.id===locationNum).name;
+  ctx.fillText('我已完成【'+site+'】任務！',300,300);
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false})
+  .then(stream=>{
+    const video=document.createElement('video'); video.srcObject=stream; video.play();
+    video.addEventListener('loadedmetadata',()=>{
+      ctx.drawImage(video,150,350,300,200);
+      stream.getTracks().forEach(t=>t.stop());
+      const dataURL=canvas.toDataURL('image/jpeg',0.9);
+      img.src=dataURL; img.style.display='block';
+      location.href='https://wa.me/85266837444?text='+encodeURIComponent('我已完成【'+site+'】任務！');
+    });
+  })
+  .catch(err=>{alert('無法開啟相機，請檢查權限。'); console.error(err)});
+}
 </script>
+</body>
+</html>
