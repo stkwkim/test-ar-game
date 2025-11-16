@@ -3,55 +3,693 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>九龍城土瓜灣AR探索之旅</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>城市解謎遊戲 - 報名系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #2575fc;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 117, 252, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .payment-method {
+            flex: 1;
+            min-width: 150px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #2575fc;
+            background-color: #f8fbff;
+        }
+        
+        .payment-method.selected {
+            border-color: #2575fc;
+            background-color: #e8f2ff;
+        }
+        
+        .payment-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2575fc;
+        }
+        
+        .code-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            margin: 15px 0;
+            border: 1px dashed #2575fc;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: #4caf50;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .notification.error {
+            background: #f44336;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+        
+        .step.active .step-number {
+            background: #2575fc;
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .step.active .step-label {
+            color: #2575fc;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <h1>城市解謎遊戲</h1>
+            <p class="subtitle">探索香港角落，解開神秘謎題</p>
+        </div>
+    </header>
+    
     <div class="container">
-        <header>
-            <h1>🏛️ 九龍城土瓜灣探索之旅</h1>
-            <p class="subtitle">時光記憶守護者 - AR城市解謎體驗</p>
-        </header>
-        
-        <div class="intro-section">
-            <div class="feature-card">
-                <h3>📱 技術要求</h3>
-                <ul>
-                    <li>智能手機 + 流動數據</li>
-                    <li>GPS定位功能</li>
-                    <li>相機權限（可選）</li>
-                    <li>建議使用Chrome瀏覽器</li>
-                </ul>
+        <!-- 步驟指示器 -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-label">填寫資料</div>
             </div>
-            
-            <div class="feature-card">
-                <h3>🎯 活動資訊</h3>
-                <ul>
-                    <li>4-6小時沉浸式體驗</li>
-                    <li>4-6人隊伍合作解謎</li>
-                    <li>探索8個歷史地點</li>
-                    <li>了解九龍城土瓜灣歷史</li>
-                </ul>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-label">選擇付款方式</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-label">完成付款</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div class="step-label">獲得登入碼</div>
             </div>
         </div>
         
-        <div class="start-section">
-            <h2>準備開始您的時光之旅</h2>
-            <p>您將扮演「時光記憶守護者」，跟隨虛擬老街坊的指引，收集散落的歷史記憶碎片。</p>
-            
-            <div class="button-group">
-                <a href="game.html" class="btn primary">開始探索</a>
-                <a href="gps-simple-test.html" class="btn secondary">GPS測試</a>
-            </div>
-            
-            <div class="notice">
-                <p>💡 提示：請確保已開啟定位服務，並在戶外空曠處開始遊戲以獲得最佳GPS信號</p>
+        <!-- 報名表單頁面 -->
+        <div id="signup-page" class="page">
+            <div class="card">
+                <h2>報名參加城市解謎</h2>
+                <p>填寫以下資料，完成付款後即可獲得專屬登入碼</p>
+                
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="name">姓名 *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">電話號碼 *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="whatsapp">WhatsApp 號碼 *</label>
+                        <input type="tel" id="whatsapp" name="whatsapp" required>
+                        <small style="color: #777;">我們將通過此號碼確認付款及發送登入碼</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">電子郵件 (可選)</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team">隊伍名稱 *</label>
+                        <input type="text" id="team" name="team" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team-size">隊伍人數 *</label>
+                        <select id="team-size" name="team-size" required>
+                            <option value="" disabled selected>請選擇人數</option>
+                            <option value="1">1人</option>
+                            <option value="2">2人</option>
+                            <option value="3">3人</option>
+                            <option value="4">4人</option>
+                            <option value="5">5人</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn">下一步：選擇付款方式</button>
+                </form>
             </div>
         </div>
         
-        <footer>
-            <p>© 2024 九龍城土瓜灣探索計劃 | 義工團體籌款活動</p>
-        </footer>
+        <!-- 付款方式選擇頁面 -->
+        <div id="payment-page" class="page hidden">
+            <div class="card">
+                <h2>選擇付款方式</h2>
+                <p>請選擇以下其中一種香港常見的免手續費支付方式</p>
+                
+                <div class="payment-methods">
+                    <div class="payment-method" data-method="fps">
+                        <div class="payment-icon">🏦</div>
+                        <div class="payment-name">轉數快 (FPS)</div>
+                    </div>
+                    
+                    <div class="payment-method" data-method="payme">
+                        <div class="payment-icon">💳</div>
+                        <div class="payment-name">PayMe</div>
+                    </div>
+                    
+                    <div class="payment-method" data-method="alipay">
+                        <div class="payment-icon">💰</div>
+                        <div class="payment-name">支付寶香港</div>
+                    </div>
+                    
+                    <div class="payment-method" data-method="wechat">
+                        <div class="payment-icon">💬</div>
+                        <div class="payment-name">WeChat Pay</div>
+                    </div>
+                </div>
+                
+                <div id="payment-instructions" class="instructions hidden">
+                    <h3 id="payment-method-name">付款指示</h3>
+                    <p id="payment-details">請按照以下指示完成付款：</p>
+                    <ul id="payment-steps">
+                        <!-- 付款步驟將由JavaScript動態生成 -->
+                    </ul>
+                    <p><strong>付款金額：HKD $150</strong></p>
+                    <p><strong>收款賬號：9123 4567</strong></p>
+                    <p>完成付款後，請截圖並發送至我們的WhatsApp：<strong>+852 1234 5678</strong></p>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" id="back-to-signup">返回上一步</button>
+                    <button type="button" class="btn" id="confirm-payment" disabled>確認付款方式</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 付款完成確認頁面 -->
+        <div id="confirm-page" class="page hidden">
+            <div class="card">
+                <h2>付款確認</h2>
+                <p>請完成以下步驟以確認您的付款：</p>
+                
+                <div class="instructions">
+                    <h3>付款確認步驟</h3>
+                    <ol>
+                        <li>使用您選擇的支付方式完成付款 (HKD $150)</li>
+                        <li>截圖付款成功畫面</li>
+                        <li>將截圖發送至我們的 WhatsApp: <strong>+852 1234 5678</strong></li>
+                        <li>我們會在確認收款後，通過 WhatsApp 發送您的專屬登入碼</li>
+                    </ol>
+                    
+                    <p>您已選擇的付款方式：<strong id="selected-payment-method"></strong></p>
+                    <p>您的 WhatsApp 號碼：<strong id="user-whatsapp"></strong></p>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" id="back-to-payment">返回上一步</button>
+                    <button type="button" class="btn" id="payment-completed">我已完成付款</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 登入碼顯示頁面 -->
+        <div id="code-page" class="page hidden">
+            <div class="card">
+                <h2>報名成功！</h2>
+                <p>感謝您報名參加城市解謎遊戲，以下是您的專屬登入碼：</p>
+                
+                <div class="code-display" id="user-code">CODE-5A8B3C</div>
+                
+                <div class="instructions">
+                    <p>請妥善保存此登入碼，您將需要使用它來登入遊戲。</p>
+                    <p>我們也會將此登入碼發送至您的 WhatsApp：<span id="user-contact"></span></p>
+                </div>
+                
+                <div class="btn-container">
+                    <a href="login.html" class="btn">前往登入遊戲</a>
+                    <a href="index.html" class="btn btn-secondary">返回首頁</a>
+                </div>
+            </div>
+        </div>
     </div>
+    
+    <footer>
+        <div class="container">
+            <p>城市解謎遊戲 &copy; 2023 版權所有</p>
+            <p>如有任何問題，請 WhatsApp 聯絡我們：+852 1234 5678</p>
+        </div>
+    </footer>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        // 頁面元素
+        const signupPage = document.getElementById('signup-page');
+        const paymentPage = document.getElementById('payment-page');
+        const confirmPage = document.getElementById('confirm-page');
+        const codePage = document.getElementById('code-page');
+        const notification = document.getElementById('notification');
+        
+        // 步驟指示器
+        const steps = document.querySelectorAll('.step');
+        
+        // 表單和按鈕
+        const signupForm = document.getElementById('signup-form');
+        const backToSignupBtn = document.getElementById('back-to-signup');
+        const confirmPaymentBtn = document.getElementById('confirm-payment');
+        const backToPaymentBtn = document.getElementById('back-to-payment');
+        const paymentCompletedBtn = document.getElementById('payment-completed');
+        
+        // 付款方式相關元素
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const paymentInstructions = document.getElementById('payment-instructions');
+        const selectedPaymentMethod = document.getElementById('selected-payment-method');
+        const userWhatsapp = document.getElementById('user-whatsapp');
+        const userContact = document.getElementById('user-contact');
+        
+        // 用戶數據
+        let userData = {};
+        let selectedPayment = null;
+        
+        // 顯示通知函數
+        function showNotification(message, isError = false) {
+            notification.textContent = message;
+            notification.className = 'notification';
+            if (isError) {
+                notification.classList.add('error');
+            }
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 更新步驟指示器
+        function updateSteps(currentStep) {
+            steps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                
+                if (index < currentStep) {
+                    step.classList.add('completed');
+                } else if (index === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+        
+        // 切換頁面顯示
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.add('hidden');
+            });
+            page.classList.remove('hidden');
+        }
+        
+        // 生成隨機登入碼
+        function generateLoginCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = 'CODE-';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+        
+        // 付款方式選擇事件
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', function() {
+                // 移除其他選中的付款方式
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                
+                // 選中當前付款方式
+                this.classList.add('selected');
+                selectedPayment = this.getAttribute('data-method');
+                
+                // 顯示付款指示
+                paymentInstructions.classList.remove('hidden');
+                
+                // 根據選擇的付款方式更新指示
+                updatePaymentInstructions(selectedPayment);
+                
+                // 啟用確認按鈕
+                confirmPaymentBtn.disabled = false;
+            });
+        });
+        
+        // 更新付款指示
+        function updatePaymentInstructions(method) {
+            const methodName = document.querySelector(`[data-method="${method}"] .payment-name`).textContent;
+            const paymentDetails = document.getElementById('payment-details');
+            const paymentSteps = document.getElementById('payment-steps');
+            
+            document.getElementById('payment-method-name').textContent = `${methodName} 付款指示`;
+            
+            let stepsHTML = '';
+            
+            switch(method) {
+                case 'fps':
+                    paymentDetails.textContent = '請使用轉數快 (FPS) 完成付款：';
+                    stepsHTML = `
+                        <li>打開您的銀行應用程式</li>
+                        <li>選擇「轉數快」功能</li>
+                        <li>輸入收款手機號碼：9123 4567</li>
+                        <li>輸入金額：HKD $150</li>
+                        <li>完成轉賬並截圖</li>
+                    `;
+                    break;
+                case 'payme':
+                    paymentDetails.textContent = '請使用 PayMe 完成付款：';
+                    stepsHTML = `
+                        <li>打開 PayMe 應用程式</li>
+                        <li>掃描我們的 QR Code 或輸入手機號碼：9123 4567</li>
+                        <li>輸入金額：HKD $150</li>
+                        <li>完成付款並截圖</li>
+                    `;
+                    break;
+                case 'alipay':
+                    paymentDetails.textContent = '請使用支付寶香港完成付款：';
+                    stepsHTML = `
+                        <li>打開支付寶香港應用程式</li>
+                        <li>掃描我們的 QR Code</li>
+                        <li>輸入金額：HKD $150</li>
+                        <li>完成付款並截圖</li>
+                    `;
+                    break;
+                case 'wechat':
+                    paymentDetails.textContent = '請使用 WeChat Pay 完成付款：';
+                    stepsHTML = `
+                        <li>打開 WeChat Pay 應用程式</li>
+                        <li>掃描我們的 QR Code</li>
+                        <li>輸入金額：HKD $150</li>
+                        <li>完成付款並截圖</li>
+                    `;
+                    break;
+            }
+            
+            paymentSteps.innerHTML = stepsHTML;
+        }
+        
+        // 報名表單提交
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 收集表單數據
+            userData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                email: document.getElementById('email').value,
+                team: document.getElementById('team').value,
+                teamSize: document.getElementById('team-size').value,
+                signupDate: new Date().toISOString()
+            };
+            
+            // 切換到付款頁面
+            showPage(paymentPage);
+            updateSteps(1);
+        });
+        
+        // 返回報名頁面
+        backToSignupBtn.addEventListener('click', function() {
+            showPage(signupPage);
+            updateSteps(0);
+        });
+        
+        // 確認付款方式
+        confirmPaymentBtn.addEventListener('click', function() {
+            if (!selectedPayment) {
+                showNotification('請先選擇付款方式', true);
+                return;
+            }
+            
+            const methodName = document.querySelector(`[data-method="${selectedPayment}"] .payment-name`).textContent;
+            selectedPaymentMethod.textContent = methodName;
+            userWhatsapp.textContent = userData.whatsapp;
+            
+            showPage(confirmPage);
+            updateSteps(2);
+        });
+        
+        // 返回付款頁面
+        backToPaymentBtn.addEventListener('click', function() {
+            showPage(paymentPage);
+            updateSteps(1);
+        });
+        
+        // 完成付款
+        paymentCompletedBtn.addEventListener('click', function() {
+            // 生成登入碼
+            userData.loginCode = generateLoginCode();
+            
+            // 儲存到localStorage (模擬數據庫)
+            let participants = JSON.parse(localStorage.getItem('participants') || '[]');
+            participants.push(userData);
+            localStorage.setItem('participants', JSON.stringify(participants));
+            
+            // 顯示登入碼
+            document.getElementById('user-code').textContent = userData.loginCode;
+            userContact.textContent = userData.whatsapp;
+            
+            // 切換到登入碼頁面
+            showPage(codePage);
+            updateSteps(3);
+            
+            // 顯示成功通知
+            showNotification('報名成功！您的登入碼已生成。');
+        });
+        
+        // 初始化顯示報名頁面
+        showPage(signupPage);
+        updateSteps(0);
+    </script>
 </body>
 </html>
