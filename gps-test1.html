@@ -1,374 +1,409 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GPS測試版 - 九龍城土瓜灣探索（完整版）</title>
+    <title>GPS版本 - 九龍城土瓜灣探索</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        身體 {
+        body {
             font-family: Arial, sans-serif;
-            內邊距：20px；
+            padding: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            最小高度：100vh；
-            顏色：白色；
+            min-height: 100vh;
+            color: white;
         }
-        。容器 {
-            最大寬度：600像素；
+        .container {
+            max-width: 600px;
             margin: 0 auto;
-            背景：白色；
-            顏色：#333；
-            內邊距：30px；
-            圓角半徑：15px；
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         h1 {
-            文字對齊方式：居中；
-            顏色：#667eea；
+            text-align: center;
+            color: #667eea;
             margin-bottom: 30px;
         }
         .location-card {
-            背景色：#f8f9fa；
-            內邊距：20px；
-            圓角半徑：10px；
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
             margin: 20px 0;
             border-left: 5px solid #667eea;
         }
         .btn {
-            背景色：#667eea；
-            顏色：白色；
-            邊框：無；
-            內邊距：12px 20px；
-            圓角半徑：8px；
-            遊標：指針；
-            字體大小：16px；
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
             margin: 5px;
         }
         .btn:hover {
-            背景色：#5a6fd8；
+            background: #5a6fd8;
         }
         .btn-success {
-            背景色：#28a745；
+            background: #28a745;
         }
         .btn-hint {
-            背景：#ffc107；
-            顏色：黑色;
+            background: #ffc107;
+            color: black;
         }
         .btn-video {
-            背景色：#dc3545；
+            background: #dc3545;
         }
         .btn-story {
-            背景色：#17a2b8；
+            background: #17a2b8;
         }
         .btn-dev {
-            背景色：#6c757d；
+            background: #6c757d;
         }
-        輸入 {
-            寬度：100%；
-            內邊距：12px；
+        input {
+            width: 100%;
+            padding: 12px;
             margin: 10px 0;
             border: 2px solid #ddd;
-            圓角半徑：8px；
-            字體大小：16px；
+            border-radius: 8px;
+            font-size: 16px;
         }
-        .完成{
-            背景：#d4edda；
-            顏色：#155724；
-            內邊距：30px；
-            圓角半徑：10px；
-            文字對齊方式：居中；
+        .completion {
+            background: #d4edda;
+            color: #155724;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
             margin: 20px 0;
-            顯示：無；
+            display: none;
         }
         .progress-container {
-            文字對齊方式：居中；
+            text-align: center;
             margin: 20px 0;
-            字體粗細：粗體；
+            font-weight: bold;
         }
         .progress-bar {
-            寬度：100%；
-            高度：20像素；
-            背景色：#e9ecef；
-            圓角半徑：10px；
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
             margin: 10px 0;
-            溢出：隱藏；
+            overflow: hidden;
         }
         .progress-fill {
-            高度：100%；
-            背景：線性漸變（90度，#28a745，#20c997）；
-            寬度：0%；
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%;
             transition: width 0.5s ease;
         }
         .progress-text {
-            顯示方式：flex；
-            justify-content: 空格;
+            display: flex;
+            justify-content: space-between;
             margin-top: 5px;
         }
         /* 影片模態框樣式 */
         .video-modal {
-            顯示：無；
-            位置：固定；
-            頂部：0；
-            左側：0；
-            寬度：100%；
-            高度：100%；
-            背景色：rgba(0,0,0,0.8);
-            z-index：1000；
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
         }
         .video-content {
-            背景：白色；
-            內邊距：20px；
-            圓角半徑：10px；
-            寬度：90%；
-            最大寬度：800像素；
-            文字對齊方式：居中；
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
         }
         .video-container {
-            位置：相對；
-            底部填充：56.25%； /* 16:9 比例 */
-            高度：0；
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            height: 0;
             margin: 20px 0;
         }
         .video-container iframe {
-            位置：絕對定位；
-            頂部：0；
-            左側：0；
-            寬度：100%；
-            高度：100%；
-            圓角半徑：8px；
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
         }
         .close-btn {
-            背景色：#6c757d；
-            顏色：白色；
-            邊框：無；
-            內邊距：10px 20px；
-            圓角半徑：5px；
-            遊標：指針；
-            字體大小：16px；
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
         }
         .video-description {
             margin: 15px 0;
-            顏色：#555；
-            字體樣式：斜體；
+            color: #555;
+            font-style: italic;
         }
-        .ar-註 {
-            背景色：#e7f3ff；
-            顏色：#004085；
-            內邊距：10px；
-            圓角半徑：5px；
+        .ar-note {
+            background: #e7f3ff;
+            color: #004085;
+            padding: 10px;
+            border-radius: 5px;
             margin: 10px 0;
-            字體大小：0.9em；
+            font-size: 0.9em;
         }
         .dev-tools {
             margin-top: 30px;
-            內邊距：15px；
-            背景色：#e9ecef；
-            圓角半徑：8px；
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
         }
         .button-group {
-            顯示方式：flex；
-            flex-wrap：包裹；
-            間隙：10px；
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             margin: 10px 0;
         }
         .hint-counter {
-            字體大小：0.8em；
-            顏色：#6c757d；
+            font-size: 0.8em;
+            color: #6c757d;
             margin-top: 5px;
-            文字對齊方式：居中；
+            text-align: center;
         }
         /* 二維碼樣式 */
-        .QR 圖碼 {
+        .qr-code {
             margin: 20px auto;
-            文字對齊方式：居中；
+            text-align: center;
         }
         .qr-code img {
-            最大寬度：200像素；
+            max-width: 200px;
             border: 2px solid #333;
-            圓角半徑：10px；
+            border-radius: 10px;
         }
         .qr-instruction {
             margin-top: 10px;
-            字體大小：0.9em；
-            顏色：#666；
+            font-size: 0.9em;
+            color: #666;
+        }
+        .gps-status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .gps-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .gps-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .location-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1001;
+            display: none;
         }
     </style>
 </head>
 <body>
+    <div class="location-notification" id="location-notification">
+        🎉 您已到達新地點！正在播放相關影片...
+    </div>
+
     <div class="container">
-        <h1>🏛️九龍城土瓜灣探索<br><small>免GPS測試版（完整功能）</small></h1>
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>GPS版本 (自動播放影片)</small></h1>
+        
+        <div class="gps-status" id="gps-status">
+            正在啟動GPS定位...
+        </div>
         
         <div class="progress-container">
-            <div>探索細節：<span id="progress-count">1</span>/6</div>
+            <div>探索進度: <span id="progress-count">0</span>/6</div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-fill"></div>
             </div>
             <div class="progress-text">
-                <span>完成：<span id="progress-percent">17</span>%</span>
-                剩餘百分比：83%
+                <span>已完成: <span id="progress-percent">0</span>%</span>
+                <span>剩餘: <span id="remaining-percent">100</span>%</span>
             </div>
         </div>
 
-        <!-- 地點1：九龍寨城公園 -->
-        <div id="location-1" class="location-card">
-            <h2>📍九龍寨城公園</h2>
-            <p><strong>故事：</strong>這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。想像一下，在1987年清拆之前，這裡是高密度建築的迷宮，充滿了各種故事和傳奇。 </p>
+        <!-- 地點1: 九龍寨城公園 -->
+        <div id="location-1" class="location-card" style="display:none;">
+            <h2>📍 九龍寨城公園</h2>
+            <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。想像一下，在1987年清拆之前，這裡是高密度建築的迷宮，充滿著各種故事和傳奇。</p>
             
             <div class="ar-note">
-                💡 在AR版本中，當您到達這個地點時，會自動顯示相關的AR影片內容
+                💡 GPS版本中，當您到達此地點時，會自動顯示相關的AR影片內容
             </div>
             
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(1, 'history')">🎬 觀看九龍寨城歷史影片</button>
-                <button class="btn btn-story" onclick="showVideo(1, 'story')">📖 故事細節</button>
+                <button class="btn btn-story" onclick="showVideo(1, 'story')">📖 故事進度</button>
             </div>
             
-            <p><strong>問題：</strong>九龍寨城公園保留了清代衙門的哪個重要建築結構？ </p>
+            <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
             <input type="text" id="answer-1" placeholder="輸入您的答案">
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(1, '衙門')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(1)">💡顯示提示 (<span id="hint-count-1">0</span>/3)</button>
+                <button class="btn btn-hint" onclick="showHint(1)">💡 顯示提示 (<span id="hint-count-1">0</span>/3)</button>
             </div>
             
-            <div class="hint-counter">點擊提示按鈕以獲得更多線索</div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
-        <!-- 地點2:十三街舊樓群 -->
+        <!-- 地點2: 十三街舊樓群 -->
         <div id="location-2" class="location-card" style="display:none;">
-            <h2>🏢十三街舊樓群</h2>
-            <p><strong>故事：</strong>十三街見證了土瓜灣的工業發展史。這些戰前騎樓建築融合了中西建築風格，曾經是繁華的商業街道，現在是社區生活的紀念。 </p>
+            <h2>🏢 十三街舊樓群</h2>
+            <p><strong>故事:</strong> 十三街見證了土瓜灣的工業發展史。這些戰前騎樓建築融合了中西建築風格，曾經是繁華的商業街道，現在則是社區生活的見證。</p>
             
             <div class="ar-note">
-                💡 在AR版本中，當您到達這個地點時，會自動顯示相關的AR影片內容
+                💡 GPS版本中，當您到達此地點時，會自動顯示相關的AR影片內容
             </div>
             
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(2, 'history')">🎬 觀看十三街歷史影片</button>
-                <button class="btn btn-story" onclick="showVideo(2, 'story')">📖 故事細節</button>
+                <button class="btn btn-story" onclick="showVideo(2, 'story')">📖 故事進度</button>
             </div>
             
-            <p><strong>問題：</strong>十三街的騎乘建築主要建於哪個年代？ </p>
+            <p><strong>問題:</strong> 十三街的騎樓建築主要建於哪個年代？</p>
             <input type="text" id="answer-2" placeholder="輸入您的答案">
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(2, '1950')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(2)">💡顯示提示 (<span id="hint-count-2">0</span>/3)</button>
+                <button class="btn btn-hint" onclick="showHint(2)">💡 顯示提示 (<span id="hint-count-2">0</span>/3)</button>
             </div>
             
-            <div class="hint-counter">點擊提示按鈕以獲得更多線索</div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
-        <!-- 地點3：土瓜灣牛棚藝術村-->
+        <!-- 地點3: 土瓜灣牛棚藝術村 -->
         <div id="location-3" class="location-card" style="display:none;">
-            <h2>🎨土瓜灣牛棚藝術村</h2>
-            <p><strong>故事：</strong>這裡曾是香港唯一的市區屠宰場，建於1908年。經過活化後，紅磚建築變成了藝術家的工作室和展覽空間，見證了城市空間功能的轉變。 </p>
+            <h2>🎨 土瓜灣牛棚藝術村</h2>
+            <p><strong>故事:</strong> 這裡曾是香港唯一的市區屠宰場，建於1908年。經過活化後，紅磚建築群變成了藝術家的工作室和展覽空間，見證了城市空間功能的轉變。</p>
             
             <div class="ar-note">
-                💡 在AR版本中，當您到達這個地點時，會自動顯示相關的AR影片內容
+                💡 GPS版本中，當您到達此地點時，會自動顯示相關的AR影片內容
             </div>
             
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(3, 'history')">🎬 觀看牛棚藝術村影片</button>
-                <button class="btn btn-story" onclick="showVideo(3, 'story')">📖 故事細節</button>
+                <button class="btn btn-story" onclick="showVideo(3, 'story')">📖 故事進度</button>
             </div>
             
-            <p><strong>問題：</strong>牛棚藝術村的前身是什麼建築？ </p>
+            <p><strong>問題:</strong> 牛棚藝術村的前身是什麼建築？</p>
             <input type="text" id="answer-3" placeholder="輸入您的答案">
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(3, '屠宰場')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(3)">💡顯示提示 (<span id="hint-count-3">0</span>/3)</button>
+                <button class="btn btn-hint" onclick="showHint(3)">💡 顯示提示 (<span id="hint-count-3">0</span>/3)</button>
             </div>
             
-            <div class="hint-counter">點擊提示按鈕以獲得更多線索</div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
-        <!-- 地點4：海心公園 -->
+        <!-- 地點4: 海心公園 -->
         <div id="location-4" class="location-card" style="display:none;">
-            <h2>🌊海心公園</h2>
-            <p><strong>故事：</strong>海心公園以獨特的魚尾石聞名，這裡曾經是海邊，漁民會在此祈求平安。園區內還有鄭成功石像，訴說著香港與海洋的求助淵源。 </p>
+            <h2>🌊 海心公園</h2>
+            <p><strong>故事:</strong> 海心公園以獨特的魚尾石聞名，這裡曾經是海邊，漁民會在此祈求平安。公園內還有鄭成功石像，訴說著香港與海洋的深厚淵源。</p>
             
             <div class="ar-note">
-                💡 在AR版本中，當您到達這個地點時，會自動顯示相關的AR影片內容
+                💡 GPS版本中，當您到達此地點時，會自動顯示相關的AR影片內容
             </div>
             
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(4, 'history')">🎬 觀看海心公園影片</button>
-                <button class="btn btn-story" onclick="showVideo(4, 'story')">📖 故事細節</button>
+                <button class="btn btn-story" onclick="showVideo(4, 'story')">📖 故事進度</button>
             </div>
             
-            <p><strong>問題：</strong>海心公園明星的自然景觀是什麼石頭？ </p>
+            <p><strong>問題:</strong> 海心公園最著名的自然景觀是什麼石？</p>
             <input type="text" id="answer-4" placeholder="輸入您的答案">
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(4, '魚尾石')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(4)">💡顯示提示 (<span id="hint-count-4">0</span>/3)</button>
+                <button class="btn btn-hint" onclick="showHint(4)">💡 顯示提示 (<span id="hint-count-4">0</span>/3)</button>
             </div>
             
-            <div class="hint-counter">點擊提示按鈕以獲得更多線索</div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
-        <!-- 地點5: 宋皇台公園 -->
+        <!-- 地點5: 宋皇臺公園 -->
         <div id="location-5" class="location-card" style="display:none;">
-            <h2>👑 宋皇台公園</h2>
-            <p><strong>故事：</strong>這裡是南宋最後一位皇帝躲避元軍的地方。 『宋皇台』石刻見證了香港在中國歷史中的重要地位，是香港最古老的歷史遺跡之一。 </p>
+            <h2>👑 宋皇臺公園</h2>
+            <p><strong>故事:</strong> 這裡是南宋最後兩位皇帝逃避元軍的地方。『宋皇臺』石刻見證了香港在中國歷史中的重要地位，是香港最古老的歷史遺跡之一。</p>
             
             <div class="ar-note">
-                💡 在AR版本中，當您到達這個地點時，會自動顯示相關的AR影片內容
+                💡 GPS版本中，當您到達此地點時，會自動顯示相關的AR影片內容
             </div>
             
             <div class="button-group">
-                <button class="btn btn-video" onclick="showVideo(5, 'history')">🎬 觀看宋皇台歷史影片</button>
-                <button class="btn btn-story" onclick="showVideo(5, 'story')">📖 故事細節</button>
+                <button class="btn btn-video" onclick="showVideo(5, 'history')">🎬 觀看宋皇臺歷史影片</button>
+                <button class="btn btn-story" onclick="showVideo(5, 'story')">📖 故事進度</button>
             </div>
             
-            <p><strong>問題：</strong>宋皇台紀念是哪個朝代的皇帝？ </p>
+            <p><strong>問題:</strong> 宋皇臺紀念的是哪個朝代的皇帝？</p>
             <input type="text" id="answer-5" placeholder="輸入您的答案">
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(5, '南宋')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(5)">💡顯示提示 (<span id="hint-count-5">0</span>/3)</button>
+                <button class="btn btn-hint" onclick="showHint(5)">💡 顯示提示 (<span id="hint-count-5">0</span>/3)</button>
             </div>
             
-            <div class="hint-counter">點擊提示按鈕以獲得更多線索</div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 地點6: 紅磡觀音廟 -->
         <div id="location-6" class="location-card" style="display:none;">
-            <h2>🙏紅磡觀音廟</h2>
-            <p><strong>故事：</strong>建於1873年的紅磡觀音廟是香港二級歷史建築，見證了紅磡地區的發展。不僅是宗教場所，更是這裡社區聚集的重要空間。 </p>
+            <h2>🙏 紅磡觀音廟</h2>
+            <p><strong>故事:</strong> 建於1873年的紅磡觀音廟是香港二級歷史建築，見證了紅磡地區的發展。這裡不僅是宗教場所，更是社區凝聚的重要空間。</p>
             
             <div class="ar-note">
-                💡 在AR版本中，當您到達這個地點時，會自動顯示相關的AR影片內容
+                💡 GPS版本中，當您到達此地點時，會自動顯示相關的AR影片內容
             </div>
             
             <div class="button-group">
                 <button class="btn btn-video" onclick="showVideo(6, 'history')">🎬 觀看紅磡觀音廟影片</button>
-                <button class="btn btn-story" onclick="showVideo(6, 'story')">📖 故事細節</button>
+                <button class="btn btn-story" onclick="showVideo(6, 'story')">📖 故事進度</button>
             </div>
             
-            <p><strong>問題：</strong>紅磡觀音廟主要供奉哪位神祇？ </p>
+            <p><strong>問題:</strong> 紅磡觀音廟主要供奉哪位神祇？</p>
             <input type="text" id="answer-6" placeholder="輸入您的答案">
             
             <div class="button-group">
                 <button class="btn" onclick="checkAnswer(6, '觀音')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(6)">💡顯示提示 (<span id="hint-count-6">0</span>/3)</button>
+                <button class="btn btn-hint" onclick="showHint(6)">💡 顯示提示 (<span id="hint-count-6">0</span>/3)</button>
             </div>
             
-            <div class="hint-counter">點擊提示按鈕以獲得更多線索</div>
+            <div class="hint-counter">點擊提示按鈕獲得更多線索</div>
         </div>
 
         <!-- 完成慶祝 -->
         <div id="completion" class="completion">
-            <h2>🎉恭喜您完成所有探索！ </h2>
-            <p>您已成功完成九龍城土瓜灣的6個歷史地點探索！ </p>
+            <h2>🎉 恭喜您完成所有探索！</h2>
+            <p>您已成功完成九龍城土瓜灣的6個歷史地點探索！</p>
             
             <div class="qr-code">
                 <h3>完成獎勵二維碼</h3>
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0168" alt="完成獎勵二維碼">
-                <p class="qr-instruction">掃描此二維碼取得數字代碼</p>
+                <p class="qr-instruction">掃描此二維碼可獲得數字代碼: 0168</p>
             </div>
             
             <button class="btn btn-success" onclick="resetGame()">重新開始遊戲</button>
@@ -377,7 +412,7 @@
         <!-- 開發者工具 -->
         <div class="dev-tools">
             <h3>🔧 開發者工具</h3>
-            <p>跳轉快速到任何地點：</p>
+            <p>快速跳轉到任意地點：</p>
             <div class="button-group">
                 <button class="btn btn-dev" onclick="skipToLocation(1)">地點1</button>
                 <button class="btn btn-dev" onclick="skipToLocation(2)">地點2</button>
@@ -385,166 +420,349 @@
                 <button class="btn btn-dev" onclick="skipToLocation(4)">地點4</button>
                 <button class="btn btn-dev" onclick="skipToLocation(5)">地點5</button>
                 <button class="btn btn-dev" onclick="skipToLocation(6)">地點6</button>
-                <button class="btn btn-success" onclick="completeGame()">直接遊戲</button>
+                <button class="btn btn-success" onclick="completeGame()">直接完成遊戲</button>
+            </div>
+            <p>GPS模擬：</p>
+            <div class="button-group">
+                <button class="btn btn-dev" onclick="simulateLocation(1)">模擬到達地點1</button>
+                <button class="btn btn-dev" onclick="simulateLocation(2)">模擬到達地點2</button>
+                <button class="btn btn-dev" onclick="simulateLocation(3)">模擬到達地點3</button>
             </div>
         </div>
     </div>
 
-    <!-- 影片模式方塊 -->
+    <!-- 影片模態框 -->
     <div id="video-modal" class="video-modal">
         <div class="video-content">
             <h2 id="video-title">影片標題</h2>
-            <p class="video-description" id="video-description">影片描述將顯示在此</p>
+            <p class="video-description" id="video-description">影片描述將顯示在這裡</p>
             
             <div class="video-container">
-                <iframe id="video-player" width="560" height="315" src="" frameborder="0"
-                    允許“加速計；自動播放；剪貼簿寫入；加密媒體；陀螺儀；畫中畫”
-                    允許全螢幕顯示
+                <iframe id="video-player" width="560" height="315" src="" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
                 </iframe>
             </div>
             
-            <p class="ar-note">在AR版本中，最有可能影片會在您抵達地點時自動播放，並與實景結合</p>
+            <p class="ar-note">在GPS版本中，這段影片會在您到達地點時自動播放，並與實景結合</p>
             
             <button class="close-btn" onclick="closeVideo()">關閉影片</button>
         </div>
     </div>
 
     <script>
-        let currentLocation = 1;
+        let currentLocation = 0;
         const totalLocations = 6;
+        let watchId = null;
         
-        // 每個地點的提示條目
+        // 每個地點的提示計數器
         const hintCounters = {
-            1:0
-            2:0
-            3:0
-            4:0
-            5:0
-            6:0
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0
+        };
+        
+        // 每個地點的提示內容
+        const hintContents = {
+            1: {
+                1: '提示：答案就在問題中！留意「衙門」這個詞。',
+                2: '提示：清代衙門的重要建築結構就是「衙門」本身。',
+                3: '答案：衙門'
+            },
+            2: {
+                1: '提示：想想香港戰後重建的時期，答案是四位數字。',
+                2: '提示：1950年代是香港戰後重建的重要時期。',
+                3: '答案：1950'
+            },
+            3: {
+                1: '提示：這個地方原本的用途與「牛」有關，答案是三個字。',
+                2: '提示：這裡原本是處理牛隻的地方。',
+                3: '答案：屠宰場'
+            },
+            4: {
+                1: '提示：這個石頭形狀像一種海洋生物的尾巴。',
+                2: '提示：答案在問題中已經提到了，是「魚尾石」。',
+                3: '答案：魚尾石'
+            },
+            5: {
+                1: '提示：這個朝代在唐朝之後，元朝之前。',
+                2: '提示：這個朝代有「北宋」和「南宋」兩個時期，答案是哪一個？',
+                3: '答案：南宋'
+            },
+            6: {
+                1: '提示：廟宇的名稱已經告訴你了。',
+                2: '提示：答案就是「觀音」。',
+                3: '答案：觀音'
+            }
         };
         
         // 每個地點的影片資訊
         const videoData = {
             1: {
-                歷史： {
-                    title: "九龍寨歷史城",
+                history: {
+                    title: "九龍寨城歷史",
                     description: "探索九龍寨城的傳奇歷史，從清代軍事要塞到獨特的城中城社區",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 },
-                故事： {
-                    title: "九龍寨城故事詳細",
+                story: {
+                    title: "九龍寨城故事進度",
                     description: "了解九龍寨城的發展歷程與社區變遷",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 }
             },
             2: {
-                歷史： {
-                    title: 《十三街舊樓群故事》,
-                    description: "了解十三街戰前騎乘建築的歷史與建築特色",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                history: {
+                    title: "十三街舊樓群故事", 
+                    description: "了解十三街戰前騎樓建築的歷史與建築特色",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 },
-                故事： {
-                    title: 《十三街發展故事》,
-                    描述：“探索十三街從商業繁華到社區記憶的轉變”，
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                story: {
+                    title: "十三街發展故事",
+                    description: "探索十三街從商業繁華到社區記憶的轉變",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 }
             },
             3: {
-                歷史： {
-                    title: 「牛棚藝術村轉型",
-                    描述：《見證從屠宰場到藝術空間的華麗轉身》,
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                history: {
+                    title: "牛棚藝術村轉型",
+                    description: "見證從屠宰場到藝術空間的華麗轉身",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 },
-                故事： {
-                    title: 「牛棚藝術村故事",
-                    描述：「了解牛棚藝術村的活化過程與藝術家故事」,
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                story: {
+                    title: "牛棚藝術村故事",
+                    description: "了解牛棚藝術村的活化過程與藝術家故事",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 }
             },
             4: {
-                歷史： {
-                    title: "海心公園與魚尾傳說",
+                history: {
+                    title: "海心公園與魚尾石傳說",
                     description: "探索海心公園的自然景觀與漁民文化",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 },
-                故事： {
-                    title: 《海心公園故事》,
-                    描述：「了解海心公園的歷史變遷與社區功能」,
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                story: {
+                    title: "海心公園故事",
+                    description: "了解海心公園的歷史變遷與社區功能",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 }
             },
             5: {
-                歷史： {
-                    title: "宋皇台歷史遺跡",
-                    description: "回顧南宋皇家在香港的歷史足跡",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                history: {
+                    title: "宋皇臺歷史遺跡",
+                    description: "追溯南宋皇室在香港的歷史蹤跡",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 },
-                故事： {
-                    title: "宋皇台故事",
-                    description: "了解宋皇台的歷史意義與文化價值",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                story: {
+                    title: "宋皇臺故事",
+                    description: "了解宋皇臺的歷史意義與文化價值",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 }
             },
             6: {
-                歷史： {
+                history: {
                     title: "紅磡觀音廟文化",
                     description: "了解紅磡觀音廟的建築特色與社區功能",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 },
-                故事： {
+                story: {
                     title: "紅磡觀音廟故事",
                     description: "探索紅磡觀音廟的歷史與社區連結",
-                    youtubeId: "dQw4w9WgXcQ" // 這是範例ID，請替換為真實的影片ID
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
                 }
             }
         };
 
-        // 初始圖紙顯示
-        更新進度();
+        // 每個地點的GPS坐標 (示例坐標，請替換為真實坐標)
+        const locationCoordinates = {
+            1: { lat: 22.332, lng: 114.186, radius: 0.001 }, // 九龍寨城公園
+            2: { lat: 22.320, lng: 114.190, radius: 0.001 }, // 十三街舊樓群
+            3: { lat: 22.317, lng: 114.189, radius: 0.001 }, // 土瓜灣牛棚藝術村
+            4: { lat: 22.304, lng: 114.195, radius: 0.001 }, // 海心公園
+            5: { lat: 22.327, lng: 114.191, radius: 0.001 }, // 宋皇臺公園
+            6: { lat: 22.303, lng: 114.190, radius: 0.001 }  // 紅磡觀音廟
+        };
+
+        // 初始化進度顯示
+        updateProgress();
+        
+        // 啟動GPS監控
+        startGPSMonitoring();
+
+        function startGPSMonitoring() {
+            if (navigator.geolocation) {
+                document.getElementById('gps-status').textContent = "GPS定位已啟動，正在監控您的位置...";
+                document.getElementById('gps-status').className = "gps-status gps-active";
+                
+                // 開始監控位置
+                watchId = navigator.geolocation.watchPosition(
+                    handlePositionUpdate,
+                    handlePositionError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            } else {
+                document.getElementById('gps-status').textContent = "您的瀏覽器不支持GPS定位功能";
+                document.getElementById('gps-status').className = "gps-status gps-inactive";
+            }
+        }
+
+        function handlePositionUpdate(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            
+            // 檢查是否接近任何未解鎖的地點
+            for (let i = 1; i <= totalLocations; i++) {
+                if (i > currentLocation) {
+                    const location = locationCoordinates[i];
+                    const distance = calculateDistance(userLat, userLng, location.lat, location.lng);
+                    
+                    if (distance <= location.radius) {
+                        // 用戶到達了新地點
+                        unlockLocation(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        function handlePositionError(error) {
+            let errorMessage = "無法獲取您的位置信息: ";
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage += "用戶拒絕了位置請求";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage += "位置信息不可用";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage += "獲取位置信息超時";
+                    break;
+                default:
+                    errorMessage += "未知錯誤";
+                    break;
+            }
+            
+            document.getElementById('gps-status').textContent = errorMessage;
+            document.getElementById('gps-status').className = "gps-status gps-inactive";
+        }
+
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            // 使用哈弗辛公式計算兩點間距離（單位：公里）
+            const R = 6371; // 地球半徑（公里）
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+            return distance;
+        }
+
+        function unlockLocation(locationNum) {
+            // 顯示通知
+            const notification = document.getElementById('location-notification');
+            notification.textContent = `🎉 您已到達${getLocationName(locationNum)}！正在播放相關影片...`;
+            notification.style.display = 'block';
+            
+            // 3秒後隱藏通知
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+            
+            // 更新當前位置
+            currentLocation = locationNum;
+            
+            // 顯示地點卡片
+            document.getElementById('location-' + locationNum).style.display = 'block';
+            
+            // 更新進度
+            updateProgress();
+            
+            // 自動播放影片 - 先播放故事影片，然後播放歷史影片
+            playStoryVideo(locationNum);
+        }
+
+        function playStoryVideo(locationNum) {
+            const storyVideo = videoData[locationNum].story;
+            if (storyVideo) {
+                // 顯示影片模態框
+                document.getElementById('video-title').textContent = storyVideo.title;
+                document.getElementById('video-description').textContent = storyVideo.description;
+                document.getElementById('video-player').src = `https://www.youtube.com/embed/${storyVideo.youtubeId}?autoplay=1`;
+                document.getElementById('video-modal').style.display = 'flex';
+                
+                // 監聽影片結束事件，以便播放歷史影片
+                const iframe = document.getElementById('video-player');
+                iframe.onload = function() {
+                    // 設置定時器檢查影片是否結束（這是一個簡化方案，實際應用中應使用YouTube API）
+                    setTimeout(() => {
+                        // 假設影片長度為3分鐘，3分鐘後自動播放歷史影片
+                        playHistoryVideo(locationNum);
+                    }, 180000); // 3分鐘
+                };
+            }
+        }
+
+        function playHistoryVideo(locationNum) {
+            const historyVideo = videoData[locationNum].history;
+            if (historyVideo) {
+                // 顯示影片模態框
+                document.getElementById('video-title').textContent = historyVideo.title;
+                document.getElementById('video-description').textContent = historyVideo.description;
+                document.getElementById('video-player').src = `https://www.youtube.com/embed/${historyVideo.youtubeId}?autoplay=1`;
+                document.getElementById('video-modal').style.display = 'flex';
+            }
+        }
+
+        function getLocationName(locationNum) {
+            const names = {
+                1: "九龍寨城公園",
+                2: "十三街舊樓群",
+                3: "土瓜灣牛棚藝術村",
+                4: "海心公園",
+                5: "宋皇臺公園",
+                6: "紅磡觀音廟"
+            };
+            return names[locationNum] || "未知地點";
+        }
 
         function checkAnswer(locationNum, correctAnswer) {
             const userAnswer = document.getElementById('answer-' + locationNum).value.trim().toLowerCase();
             const correct = correctAnswer.toLowerCase();
             
-            // 更廣泛的答案檢查
+            // 更寬鬆的答案檢查
             let isCorrect = false;
             
             // 檢查完全匹配
-            如果（使用者答案 === 正確）{
+            if (userAnswer === correct) {
                 isCorrect = true;
             }
-            //檢查包含關係
-            否則如果（userAnswer.includes(correct) || correct.includes(userAnswer)）{
+            // 檢查包含關係
+            else if (userAnswer.includes(correct) || correct.includes(userAnswer)) {
                 isCorrect = true;
             }
             // 特殊情況：數字答案
-            else if (正確 === '1950' && (userAnswer === '50 年代' || userAnswer === '五十年代')) {
+            else if (correct === '1950' && (userAnswer === '50年代' || userAnswer === '五十年代')) {
                 isCorrect = true;
             }
             
-            如果（isCorrect）{
-                alert('✅答案正確！恭喜您完成了這個地方的探索！');
-                
-                // 隱藏當前地點
-                document.getElementById('location-' + locationNum).style.display = 'none';
-                
-                // 更新細節
-                currentLocation++;
-                更新進度();
-                
-                如果 (目前位置 <= 總位置數) {
-                    // 顯示下一個地點
-                    document.getElementById('location-' + currentLocation).style.display = 'block';
-                } 別的 {
-                    // 完成所有地點
-                    completeGame();
-                }
+            if (isCorrect) {
+                alert('✅ 答案正確！恭喜您完成這個地點的探索！');
                 
                 // 清空答案框
                 document.getElementById('answer-' + locationNum).value = '';
                 
-            } 別的 {
-                alert('❌答案不正確，請再試一次或查看提示。\n\n提示：答案通常是1-3個字的關鍵字。');
+            } else {
+                alert('❌ 答案不正確，請再試一次或查看提示。\n\n提示：答案通常是1-3個字的關鍵詞。');
             }
         }
 
@@ -552,82 +770,58 @@
             // 增加提示計數
             hintCounters[locationNum]++;
             
-            // 更新提示按鈕上的統計數據
+            // 更新提示按鈕上的計數
             document.getElementById('hint-count-' + locationNum).textContent = hintCounters[locationNum];
             
             // 根據提示次數顯示不同的提示
-            consthintLevel = Math.min(hintCounters[locationNum], 3);
+            const hintLevel = Math.min(hintCounters[locationNum], 3);
             
-            const hints = {
-                1: {
-                    1: '提示：答案就在問題中！注意「衙門」這個字。 ',
-                    2: '提示：清代衙門的重要建築結構就是「衙門」本身。 ',
-                    3: '答案：衙門'
-                },
-                2: {
-                    1: '提示：想想香港戰後重建時期，答案是四位數字。 ',
-                    2: '提示：1950年代是香港戰後重建的重要時期。 ',
-                    3: '答案：1950'
-                },
-                3: {
-                    1: '提示：這個地方具體用途與「牛」有關，答案是三個字。 ',
-                    2: '提示：這裡具體是處理牛的地方。 ',
-                    3: '答案：屠宰場'
-                },
-                4: {
-                    1: '提示：答案就在問題中！是一種與海洋生物有關的石頭。 ',
-                    2: '提示：這種石頭形狀像魚的尾巴。 ',
-                    3: '答案：魚尾石'
-                },
-                5: {
-                    1: '提示：注意中國歷史中南北宋的時期，答案是兩個字。 ',
-                    2: '提示：南宋是宋朝的發育階段。 ',
-                    3: '答案：南宋'
-                },
-                6: {
-                    1: '提示：答案就在廟宇名稱中！ ',
-                    2: '提示：觀音廟主要供奉的就是觀音菩薩。 ',
-                    3: '答案：觀音'
-                }
-            };
+            if (hintContents[locationNum] && hintContents[locationNum][hintLevel]) {
+                alert(hintContents[locationNum][hintLevel]);
+            }
             
-            alert(hints[locationNum][hintLevel]);
+            // 如果已經顯示了答案，則禁用提示按鈕
+            if (hintLevel >= 3) {
+                document.querySelector(`#location-${locationNum} .btn-hint`).disabled = true;
+            }
+        }
+
+        function showVideo(locationNum, type) {
+            const videoInfo = videoData[locationNum][type];
+            if (videoInfo) {
+                document.getElementById('video-title').textContent = videoInfo.title;
+                document.getElementById('video-description').textContent = videoInfo.description;
+                document.getElementById('video-player').src = `https://www.youtube.com/embed/${videoInfo.youtubeId}`;
+                document.getElementById('video-modal').style.display = 'flex';
+            }
+        }
+
+        function closeVideo() {
+            document.getElementById('video-modal').style.display = 'none';
+            document.getElementById('video-player').src = '';
+        }
+
+        function updateProgress() {
+            const progressPercent = Math.round((currentLocation / totalLocations) * 100);
+            const remainingPercent = 100 - progressPercent;
             
-            // 如果已經顯示了答案，提示重置條目
-            如果 (提示等級 === 3) {
+            document.getElementById('progress-count').textContent = currentLocation;
+            document.getElementById('progress-percent').textContent = progressPercent;
+            document.getElementById('remaining-percent').textContent = remainingPercent;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+            
+            // 如果所有地點都已解鎖，顯示完成畫面
+            if (currentLocation >= totalLocations) {
                 setTimeout(() => {
-                    hintCounters[locationNum] = 0;
-                    document.getElementById('hint-count-' + locationNum).textContent = '0';
+                    completeGame();
                 }, 2000);
             }
         }
 
-        function showVideo(locationNum, videoType) {
-            const videoInfo = videoData[locationNum][videoType];
-            如果 (!videoInfo) 返回；
-            
-            // 設定影片標題和描述
-            document.getElementById('video-title').textContent = videoInfo.title;
-            document.getElementById('影片描述').textContent = videoInfo.description;
-            
-            // 設定YouTube影片（使用您提供的影片ID）
-            const videoPlayer = document.getElementById('video-player');
-            videoPlayer.src = `https://www.youtube.com/embed/${videoInfo.youtubeId}?autoplay=1`;
-            
-            // 顯示影片模式框
-            document.getElementById('video-modal').style.display = 'flex';
-        }
-
-        function closeVideo() {
-            // 隱藏影片模式框
-            document.getElementById('video-modal').style.display = 'none';
-            
-            // 停止影片播放
-            const videoPlayer = document.getElementById('video-player');
-            videoPlayer.src = '';
-        }
-
         function skipToLocation(locationNum) {
+            // 更新當前位置
+            currentLocation = locationNum;
+            
             // 隱藏所有地點
             for (let i = 1; i <= totalLocations; i++) {
                 document.getElementById('location-' + i).style.display = 'none';
@@ -635,13 +829,8 @@
             
             // 顯示指定地點
             document.getElementById('location-' + locationNum).style.display = 'block';
-            currentLocation = locationNum;
-            更新進度();
             
-            // 隱藏完成訊息
-            document.getElementById('completion').style.display = 'none';
-            
-            alert('已跳到地點' + locationNum);
+            updateProgress();
         }
 
         function completeGame() {
@@ -650,68 +839,50 @@
                 document.getElementById('location-' + i).style.display = 'none';
             }
             
-            // 顯示完成訊息
+            // 顯示完成畫面
             document.getElementById('completion').style.display = 'block';
-            目前位置 = 總位置數 + 1;
-            更新進度();
+            
+            // 更新進度
+            currentLocation = totalLocations;
+            updateProgress();
         }
 
         function resetGame() {
-            // 隱藏所有地點並完成訊息
-            for (let i = 2; i <= totalLocations; i++) {
-                document.getElementById('location-' + i).style.display = 'none';
-            }
-            document.getElementById('completion').style.display = 'none';
+            // 重置所有狀態
+            currentLocation = 0;
             
-            // 顯示第一個地點
-            document.getElementById('location-1').style.display = 'block';
-            currentLocation = 1;
-            更新進度();
-            
-            // 清空所有答案
+            // 重置提示計數器
             for (let i = 1; i <= totalLocations; i++) {
-                document.getElementById('answer-' + i).value = '';
-                // 重置提示條目
                 hintCounters[i] = 0;
                 document.getElementById('hint-count-' + i).textContent = '0';
+                document.querySelector(`#location-${i} .btn-hint`).disabled = false;
+                document.getElementById('answer-' + i).value = '';
+                document.getElementById('location-' + i).style.display = 'none';
             }
             
-            alert('遊戲已重置！');
+            // 隱藏完成畫面
+            document.getElementById('completion').style.display = 'none';
+            
+            // 重新啟動GPS監控
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+            }
+            startGPSMonitoring();
+            
+            updateProgress();
         }
-        
-        function updateProgress() {
-            // 更新細節數字
-            document.getElementById('progress-count').textContent = Math.min(currentLocation - 1, totalLocations);
-            
-            // 計算百分比
-            const progressPercent = Math.round(((currentLocation - 1) / totalLocations) * 100);
-            const remainingPercent = 100 - progressPercent;
-            
-            // 更新百分比顯示
-            document.getElementById('progress-percent').textContent = progressPercent;
-            document.getElementById('remaining-percent').textContent = remainingPercent;
-            
-            // 更新細節條
-            document.getElementById('progress-fill').style.width = progressPercent + '%';
+
+        function simulateLocation(locationNum) {
+            // 模擬到達指定地點
+            unlockLocation(locationNum);
         }
-        
-        // 點選影片模態框背景關閉影片
-        document.getElementById('video-modal').addEventListener('click', function(e) {
-            如果 (e.target === this) {
-                關閉視訊串流();
+
+        // 點擊模態框外部關閉影片
+        document.getElementById('video-modal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeVideo();
             }
         });
-       /* ===== 測試專用：6 個景點都圍繞「你現在位置」 ===== */
-const HERE = { lat: 22.317212, lng: 114.167039 };   // 你給的座標
-const POIS = {
-  1: { name: '九龍寨城公園', lat: HERE.lat + 0.00080, lng: HERE.lng + 0.00080 }, // ~90 m
-  2: { name: '十三街舊樓群', lat: HERE.lat - 0.00090, lng: HERE.lng + 0.00090 }, // ~100 m
-  3: { name: '牛棚藝術村',   lat: HERE.lat + 0.00100, lng: HERE.lng - 0.00070 }, // ~110 m
-  4: { name: '海心公園',     lat: HERE.lat - 0.00110, lng: HERE.lng - 0.00060 }, // ~120 m
-  5: { name: '宋皇臺公園',   lat: HERE.lat + 0.00120, lng: HERE.lng + 0.00120 }, // ~130 m
-  6: { name: '紅磡觀音廟',   lat: HERE.lat - 0.00130, lng: HERE.lng + 0.00130 }  // ~140 m
-};
-const TRIGGER_M = 200;   // 200 公尺內就能觸發（測完可改回 30）
     </script>
 </body>
 </html>
