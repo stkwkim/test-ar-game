@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>香港城市解謎 - 九龍城及土瓜灣</title>
+    <style>
+        :root {
+            --primary-color: #e53935;
+            --secondary-color: #283593;
+            --accent-color: #ffc107;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        
+        /* 导航栏 */
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #c62828;
+            transform: translateY(-2px);
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1549451371-64aa98a6f660?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* 游戏介绍 */
+        .intro {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            margin: 15px auto;
+        }
+        
+        .intro-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .intro-text {
+            flex: 1;
+        }
+        
+        .intro-image {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .intro-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* 案件区域 */
+        .cases {
+            padding: 80px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .case-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .case-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .case-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .case-card:hover .case-image img {
+            transform: scale(1.1);
+        }
+        
+        .case-content {
+            padding: 20px;
+        }
+        
+        .case-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .case-desc {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        /* 视频区域 */
+        .videos {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        /* 登录区域 */
+        .login {
+            padding: 80px 0;
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+        }
+        
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+        }
+        
+        /* 底部 */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .copyright {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .intro-content {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">香港<span>城市解謎</span></div>
+                <ul class="nav-links">
+                    <li><a href="#intro">遊戲介紹</a></li>
+                    <li><a href="#cases">案件列表</a></li>
+                    <li><a href="#videos">影視介紹</a></li>
+                    <li><a href="#login">登入遊戲</a></li>
+                </ul>
+                <a href="#cases" class="btn">立即報名</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <h1>探索九龍城及土瓜灣的隱藏故事</h1>
+            <p>穿梭於充滿歷史的街巷，解開城市謎題，體驗不一樣的香港</p>
+            <a href="#cases" class="btn">開始探索</a>
+        </div>
+    </section>
+
+    <!-- 游戏介绍 -->
+    <section id="intro" class="intro">
+        <div class="container">
+            <h2 class="section-title">遊戲介紹</h2>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <h3>解開城市密碼，重現歷史軌跡</h3>
+                    <p>九龍城及土瓜灣地區蘊含著豐富的歷史文化與都市傳說，從前九龍城寨的神秘氛圍到土瓜灣的工業變遷，每一條街道都藏著不為人知的故事。</p>
+                    <p>我們的解謎遊戲將帶領您走進這些充滿魅力的街區，通過實地探索、線索收集和謎題破解，深入了解香港的多元文化與歷史變遷。</p>
+                    <p>準備好迎接挑戰了嗎？加入我們，成為城市探秘者！</p>
+                </div>
+                <div class="intro-image">
+                    <img src="https://images.unsplash.com/photo-1597074862788-84b4bf0c1a58?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="九龍城區街景">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 案件区域 -->
+    <section id="cases" class="cases">
+        <div class="container">
+            <h2 class="section-title">案件列表</h2>
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-image">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25856cd63?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="消失的九龍城寨">
+                    </div>
+                    <div class="case-content">
+                        <h3 class="case-title">消失的九龍城寨</h3>
+                        <p class="case-desc">探索曾經的「三不管」地帶，解開九龍城寨拆除前的未解之謎。</p>
+                        <a href="#" class="btn">報名參加</a>
+                    </div>
+                </div>
+                
+                <div class="case-card">
+                    <div class="case-image">
+                        <img src="https://images.unsplash.com/photo-1518638150340-f706e86654de?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="土瓜灣工廈秘聞">
+                    </div>
+                    <div class="case-content">
+                        <h3 class="case-title">土瓜灣工廈秘聞</h3>
+                        <p class="case-desc">深入工業區舊址，揭開香港工業黃金時代的隱藏故事。</p>
+                        <a href="#" class="btn">報名參加</a>
+                    </div>
+                </div>
+                
+                <div class="case-card">
+                    <div class="case-image">
+                        <img src="https://images.unsplash.com/photo-1549451371-64aa98a6f660?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="宋皇臺傳說">
+                    </div>
+                    <div class="case-content">
+                        <h3 class="case-title">宋皇臺傳說</h3>
+                        <p class="case-desc">追尋南宋末代皇帝在九龍的足跡，破解歷史遺留的密碼。</p>
+                        <a href="#" class="btn">報名參加</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 视频区域 -->
+    <section id="videos" class="videos">
+        <div class="container">
+            <h2 class="section-title">影視介紹</h2>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="香港城市解謎介紹影片" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 登录区域 -->
+    <section id="login" class="login">
+        <div class="container">
+            <h2 class="section-title">登入遊戲</h2>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">用戶名稱</label>
+                    <input type="text" id="username" placeholder="請輸入用戶名稱">
+                </div>
+                <div class="form-group">
+                    <label for="password">密碼</label>
+                    <input type="password" id="password" placeholder="請輸入密碼">
+                </div>
+                <button class="btn" style="width: 100%;">登入</button>
+                <p style="margin-top: 15px;">還沒有帳號？<a href="#" style="color: var(--accent-color);">立即註冊</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>關於我們</h3>
+                    <p>我們是一群熱愛香港歷史與文化的團隊，致力於通過創新的遊戲形式，讓更多人了解和體驗香港獨特的城市魅力。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速連結</h3>
+                    <ul class="footer-links">
+                        <li><a href="#intro">遊戲介紹</a></li>
+                        <li><a href="#cases">案件列表</a></li>
+                        <li><a href="#videos">影視介紹</a></li>
+                        <li><a href="#login">登入遊戲</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>聯絡我們</h3>
+                    <ul class="footer-links">
+                        <li>電話: +852 1234 5678</li>
+                        <li>電郵: info@hkcitymystery.hk</li>
+                        <li>地址: 九龍城區某某大廈</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 香港城市解謎 - 九龍城及土瓜灣地區. 版權所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 简单的表单验证
+        document.querySelector('.login-form .btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if(!username || !password) {
+                alert('請填寫所有欄位');
+                return;
+            }
+            
+            // 这里应该发送到服务器进行验证
+            // 现在只是模拟登录成功
+            alert('登入成功！即將進入遊戲...');
+        });
+    </script>
+</body>
+</html>
