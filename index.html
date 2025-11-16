@@ -1,100 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-HK">
 <head>
-    <title>GPS測試</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .status { padding: 10px; margin: 10px 0; }
-        .success { background: #d4edda; }
-        .error { background: #f8d7da; }
-        .info { background: #d1ecf1; }
-    </style>
+    <title>九龍城土瓜灣AR探索之旅</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>GPS功能測試</h1>
-    
-    <button onclick="startGPS()">開始GPS測試</button>
-    <button onclick="stopGPS()">停止GPS</button>
-    
-    <div id="status" class="status info">
-        點擊"開始GPS測試"按鈕開始
+    <div class="container">
+        <header>
+            <h1>🏛️ 九龍城土瓜灣探索之旅</h1>
+            <p class="subtitle">時光記憶守護者 - AR城市解謎體驗</p>
+        </header>
+        
+        <div class="intro-section">
+            <div class="feature-card">
+                <h3>📱 技術要求</h3>
+                <ul>
+                    <li>智能手機 + 流動數據</li>
+                    <li>GPS定位功能</li>
+                    <li>相機權限（可選）</li>
+                    <li>建議使用Chrome瀏覽器</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🎯 活動資訊</h3>
+                <ul>
+                    <li>4-6小時沉浸式體驗</li>
+                    <li>4-6人隊伍合作解謎</li>
+                    <li>探索8個歷史地點</li>
+                    <li>了解九龍城土瓜灣歷史</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="start-section">
+            <h2>準備開始您的時光之旅</h2>
+            <p>您將扮演「時光記憶守護者」，跟隨虛擬老街坊的指引，收集散落的歷史記憶碎片。</p>
+            
+            <div class="button-group">
+                <a href="game.html" class="btn primary">開始探索</a>
+                <a href="gps-test.html" class="btn secondary">GPS測試</a>
+            </div>
+            
+            <div class="notice">
+                <p>💡 提示：請確保已開啟定位服務，並在戶外空曠處開始遊戲以獲得最佳GPS信號</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2024 九龍城土瓜灣探索計劃 | 義工團體籌款活動</p>
+        </footer>
     </div>
-    
-    <div id="results">
-        <p><strong>經度:</strong> <span id="longitude">-</span></p>
-        <p><strong>緯度:</strong> <span id="latitude">-</span></p>
-        <p><strong>精度:</strong> <span id="accuracy">-</span> 米</p>
-        <p><strong>最後更新:</strong> <span id="timestamp">-</span></p>
-    </div>
-
-    <script>
-        let watchId = null;
-        
-        function startGPS() {
-            if (!navigator.geolocation) {
-                showStatus("您的瀏覽器不支持GPS功能", "error");
-                return;
-            }
-            
-            showStatus("正在請求GPS權限...", "info");
-            
-            // 請求高精度位置
-            const options = {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            };
-            
-            watchId = navigator.geolocation.watchPosition(
-                function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    const acc = position.coords.accuracy;
-                    
-                    document.getElementById('latitude').textContent = lat;
-                    document.getElementById('longitude').textContent = lng;
-                    document.getElementById('accuracy').textContent = acc;
-                    document.getElementById('timestamp').textContent = new Date().toLocaleTimeString();
-                    
-                    showStatus(`GPS信號正常！精度: ${acc}米`, "success");
-                },
-                function(error) {
-                    let errorMessage = "無法獲取位置: ";
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            errorMessage += "用戶拒絕了位置請求";
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            errorMessage += "位置信息不可用";
-                            break;
-                        case error.TIMEOUT:
-                            errorMessage += "請求位置超時";
-                            break;
-                        default:
-                            errorMessage += "未知錯誤";
-                            break;
-                    }
-                    showStatus(errorMessage, "error");
-                },
-                options
-            );
-        }
-        
-        function stopGPS() {
-            if (watchId) {
-                navigator.geolocation.clearWatch(watchId);
-                watchId = null;
-                showStatus("GPS已停止", "info");
-            }
-        }
-        
-        function showStatus(message, type) {
-            const statusEl = document.getElementById('status');
-            statusEl.textContent = message;
-            statusEl.className = `status ${type}`;
-        }
-    </script>
 </body>
 </html>
