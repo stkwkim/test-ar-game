@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>免GPS測試版 - 九龍城土瓜灣探索 (隱藏提示版)</title>
+    <title>免GPS測試版 - 九龍城土瓜灣探索 (完整版)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -55,6 +55,9 @@
         }
         .btn-video {
             background: #dc3545;
+        }
+        .btn-story {
+            background: #17a2b8;
         }
         .btn-dev {
             background: #6c757d;
@@ -175,11 +178,26 @@
             margin-top: 5px;
             text-align: center;
         }
+        /* 二維碼樣式 */
+        .qr-code {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .qr-code img {
+            max-width: 200px;
+            border: 2px solid #333;
+            border-radius: 10px;
+        }
+        .qr-instruction {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏛️ 九龍城土瓜灣探索<br><small>免GPS測試版 (隱藏提示)</small></h1>
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>免GPS測試版 (完整功能)</small></h1>
         
         <div class="progress-container">
             <div>探索進度: <span id="progress-count">1</span>/6</div>
@@ -202,7 +220,8 @@
             </div>
             
             <div class="button-group">
-                <button class="btn btn-video" onclick="showVideo(1)">🎬 觀看九龍寨城歷史影片</button>
+                <button class="btn btn-video" onclick="showVideo(1, 'history')">🎬 觀看九龍寨城歷史影片</button>
+                <button class="btn btn-story" onclick="showVideo(1, 'story')">📖 故事進度</button>
             </div>
             
             <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
@@ -226,7 +245,8 @@
             </div>
             
             <div class="button-group">
-                <button class="btn btn-video" onclick="showVideo(2)">🎬 觀看十三街歷史影片</button>
+                <button class="btn btn-video" onclick="showVideo(2, 'history')">🎬 觀看十三街歷史影片</button>
+                <button class="btn btn-story" onclick="showVideo(2, 'story')">📖 故事進度</button>
             </div>
             
             <p><strong>問題:</strong> 十三街的騎樓建築主要建於哪個年代？</p>
@@ -250,7 +270,8 @@
             </div>
             
             <div class="button-group">
-                <button class="btn btn-video" onclick="showVideo(3)">🎬 觀看牛棚藝術村影片</button>
+                <button class="btn btn-video" onclick="showVideo(3, 'history')">🎬 觀看牛棚藝術村影片</button>
+                <button class="btn btn-story" onclick="showVideo(3, 'story')">📖 故事進度</button>
             </div>
             
             <p><strong>問題:</strong> 牛棚藝術村的前身是什麼建築？</p>
@@ -274,7 +295,8 @@
             </div>
             
             <div class="button-group">
-                <button class="btn btn-video" onclick="showVideo(4)">🎬 觀看海心公園影片</button>
+                <button class="btn btn-video" onclick="showVideo(4, 'history')">🎬 觀看海心公園影片</button>
+                <button class="btn btn-story" onclick="showVideo(4, 'story')">📖 故事進度</button>
             </div>
             
             <p><strong>問題:</strong> 海心公園最著名的自然景觀是什麼石？</p>
@@ -298,7 +320,8 @@
             </div>
             
             <div class="button-group">
-                <button class="btn btn-video" onclick="showVideo(5)">🎬 觀看宋皇臺歷史影片</button>
+                <button class="btn btn-video" onclick="showVideo(5, 'history')">🎬 觀看宋皇臺歷史影片</button>
+                <button class="btn btn-story" onclick="showVideo(5, 'story')">📖 故事進度</button>
             </div>
             
             <p><strong>問題:</strong> 宋皇臺紀念的是哪個朝代的皇帝？</p>
@@ -322,7 +345,8 @@
             </div>
             
             <div class="button-group">
-                <button class="btn btn-video" onclick="showVideo(6)">🎬 觀看紅磡觀音廟影片</button>
+                <button class="btn btn-video" onclick="showVideo(6, 'history')">🎬 觀看紅磡觀音廟影片</button>
+                <button class="btn btn-story" onclick="showVideo(6, 'story')">📖 故事進度</button>
             </div>
             
             <p><strong>問題:</strong> 紅磡觀音廟主要供奉哪位神祇？</p>
@@ -340,6 +364,13 @@
         <div id="completion" class="completion">
             <h2>🎉 恭喜您完成所有探索！</h2>
             <p>您已成功完成九龍城土瓜灣的6個歷史地點探索！</p>
+            
+            <div class="qr-code">
+                <h3>完成獎勵二維碼</h3>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0168" alt="完成獎勵二維碼">
+                <p class="qr-instruction">掃描此二維碼可獲得數字代碼: 0168</p>
+            </div>
+            
             <button class="btn btn-success" onclick="resetGame()">重新開始遊戲</button>
         </div>
 
@@ -395,34 +426,76 @@
         // 每個地點的影片資訊
         const videoData = {
             1: {
-                title: "九龍寨城歷史",
-                description: "探索九龍寨城的傳奇歷史，從清代軍事要塞到獨特的城中城社區",
-                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                history: {
+                    title: "九龍寨城歷史",
+                    description: "探索九龍寨城的傳奇歷史，從清代軍事要塞到獨特的城中城社區",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                },
+                story: {
+                    title: "九龍寨城故事進度",
+                    description: "了解九龍寨城的發展歷程與社區變遷",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                }
             },
             2: {
-                title: "十三街舊樓群故事", 
-                description: "了解十三街戰前騎樓建築的歷史與建築特色",
-                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                history: {
+                    title: "十三街舊樓群故事", 
+                    description: "了解十三街戰前騎樓建築的歷史與建築特色",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                },
+                story: {
+                    title: "十三街發展故事",
+                    description: "探索十三街從商業繁華到社區記憶的轉變",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                }
             },
             3: {
-                title: "牛棚藝術村轉型",
-                description: "見證從屠宰場到藝術空間的華麗轉身",
-                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                history: {
+                    title: "牛棚藝術村轉型",
+                    description: "見證從屠宰場到藝術空間的華麗轉身",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                },
+                story: {
+                    title: "牛棚藝術村故事",
+                    description: "了解牛棚藝術村的活化過程與藝術家故事",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                }
             },
             4: {
-                title: "海心公園與魚尾石傳說",
-                description: "探索海心公園的自然景觀與漁民文化",
-                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                history: {
+                    title: "海心公園與魚尾石傳說",
+                    description: "探索海心公園的自然景觀與漁民文化",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                },
+                story: {
+                    title: "海心公園故事",
+                    description: "了解海心公園的歷史變遷與社區功能",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                }
             },
             5: {
-                title: "宋皇臺歷史遺跡",
-                description: "追溯南宋皇室在香港的歷史蹤跡",
-                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                history: {
+                    title: "宋皇臺歷史遺跡",
+                    description: "追溯南宋皇室在香港的歷史蹤跡",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                },
+                story: {
+                    title: "宋皇臺故事",
+                    description: "了解宋皇臺的歷史意義與文化價值",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                }
             },
             6: {
-                title: "紅磡觀音廟文化",
-                description: "了解紅磡觀音廟的建築特色與社區功能",
-                youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                history: {
+                    title: "紅磡觀音廟文化",
+                    description: "了解紅磡觀音廟的建築特色與社區功能",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                },
+                story: {
+                    title: "紅磡觀音廟故事",
+                    description: "探索紅磡觀音廟的歷史與社區連結",
+                    youtubeId: "dQw4w9WgXcQ" // 這是示例ID，請替換為真實的影片ID
+                }
             }
         };
 
@@ -529,8 +602,8 @@
             }
         }
 
-        function showVideo(locationNum) {
-            const videoInfo = videoData[locationNum];
+        function showVideo(locationNum, videoType) {
+            const videoInfo = videoData[locationNum][videoType];
             if (!videoInfo) return;
             
             // 設置影片標題和描述
