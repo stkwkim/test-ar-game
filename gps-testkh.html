@@ -1,175 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>免GPS測試版 - 九龍城土瓜灣探索 (完整版)</title>
+    <title>GPS-觸發可選影片 + 距離提示版</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: white;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            color: #333;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        h1 {
-            text-align: center;
-            color: #667eea;
-            margin-bottom: 30px;
-        }
-        .location-card {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 5px solid #667eea;
-        }
-        .btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
-        }
-        .btn:hover {
-            background: #5a6fd8;
-        }
-        .btn-success {
-            background: #28a745;
-        }
-        .btn-hint {
-            background: #ffc107;
-            color: black;
-        }
-        .btn-video {
-            background: #dc3545;
-        }
-        .btn-story {
-            background: #17a2b8;
-        }
-        .btn-dev {
-            background: #6c757d;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        .completion {
-            background: #d4edda;
-            color: #155724;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 20px 0;
-            display: none;
-        }
-        .progress-container {
-            text-align: center;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: #e9ecef;
-            border-radius: 10px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #28a745, #20c997);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        .progress-text {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-        }
-        /* 影片全屏模態框 */
-        .gps-video-overlay {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 9999;
-            display: none;
-        }
-        .gps-video-overlay iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        body{font-family:Arial, sans-serif;padding:20px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:white}
+        .container{max-width:600px;margin:0 auto;background:white;color:#333;padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+        h1{text-align:center;color:#667eea;margin-bottom:30px}
+        .location-card{background:#f8f9fa;padding:20px;border-radius:10px;margin:20px 0;border-left:5px solid #667eea}
+        .btn{background:#667eea;color:white;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-size:16px;margin:5px}
+        .btn:hover{background:#5a6fd8}
+        .btn-success{background:#28a745}
+        .btn-hint{background:#ffc107;color:black}
+        .btn-video{background:#dc3545}
+        .btn-story{background:#17a2b8}
+        .btn-dev{background:#6c757d}
+        input{width:100%;padding:12px;margin:10px 0;border:2px solid #ddd;border-radius:8px;font-size:16px}
+        .completion{background:#d4edda;color:#155724;padding:30px;border-radius:10px;text-align:center;margin:20px 0;display:none}
+        .progress-container{text-align:center;margin:20px 0;font-weight:bold}
+        .progress-bar{width:100%;height:20px;background:#e9ecef;border-radius:10px;margin:10px 0;overflow:hidden}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#28a745,#20c997);width:0%;transition:width .5s ease}
+        .progress-text{display:flex;justify-content:space-between;margin-top:5px}
+        /* ---- 新：GPS 可選影片提示 ---- */
+        .gps-prompt{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#333;padding:15px 20px;border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,.3);z-index:9999;display:none}
+        .gps-prompt button{margin:0 5px}
+        /* ---- 新：距離標籤 ---- */
+        .distance-badge{background:#e7f3ff;color:#004085;padding:4px 8px;border-radius:4px;font-size:.85em;margin-left:8px}
+        /* ---- 全屏影片 ---- */
+        .gps-video-overlay{position:fixed;inset:0;background:#000;display:none;z-index:9999}
+        .gps-video-overlay iframe{width:100%;height:100%;border:none}
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
-        <h1>🏛️ 九龍城土瓜灣探索<br><small>GPS-AR 自動影片測試版</small></h1>
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>GPS-可選影片 + 距離提示版</small></h1>
 
         <div class="progress-container">
             <div>探索進度: <span id="progress-count">1</span>/6</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
             <div class="progress-text">
                 <span>已完成: <span id="progress-percent">17</span>%</span>
                 <span>剩餘: <span id="remaining-percent">83</span>%</span>
             </div>
         </div>
 
-        <!-- 地點 1~6 卡片 -->
-        <div id="location-1" class="location-card">
-            <h2>📍 九龍寨城公園</h2>
-            <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城……</p>
-            <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
-            <input id="answer-1" placeholder="輸入您的答案">
-            <div style="margin-top:10px">
-                <button class="btn" onclick="checkAnswer(1,'衙門')">提交答案</button>
-                <button class="btn btn-hint" onclick="showHint(1)">💡 提示 (<span id="hint-count-1">0</span>/3)</button>
+        <!-- ===== 地點 1~6 卡片（由 JS 生成） ===== -->
+        <div id="cards-area"></div>
+
+        <!-- ===== GPS 可選影片提示 ===== -->
+        <div id="gpsPrompt" class="gps-prompt">
+            <div>📍 你已到達 <strong id="promptPoiName"></strong>！</div>
+            <div style="margin-top:8px">
+                <button class="btn btn-story" onclick="playSelected('story')">播放故事進度</button>
+                <button class="btn btn-video" onclick="playSelected('hist')">播放歷史片段</button>
+                <button class="btn" onclick="closePrompt()">稍後再說</button>
             </div>
         </div>
-        <!-- 為節省篇幅，其餘 5 張卡片用 JS 自動生成 -->
-    </div>
 
-    <!-- 全屏 GPS 影片容器 -->
-    <div id="gpsVideo" class="gps-video-overlay">
-        <iframe id="gpsPlayer" allow="autoplay" allowfullscreen></iframe>
-    </div>
+        <!-- ===== 全屏影片 ===== -->
+        <div id="gpsVideo" class="gps-video-overlay">
+            <iframe id="gpsPlayer" allow="autoplay" allowfullscreen></iframe>
+        </div>
 
-    <!-- 開發者工具 -->
-    <div class="dev-tools" style="margin-top:30px;padding:15px;background:#e9ecef;border-radius:8px;">
-        <h3>🔧 開發者工具</h3>
-        <div class="button-group">
-            <button class="btn btn-dev" onclick="skipToLocation(1)">地點1</button>
-            <button class="btn btn-dev" onclick="skipToLocation(2)">地點2</button>
-            <button class="btn btn-dev" onclick="skipToLocation(3)">地點3</button>
-            <button class="btn btn-dev" onclick="skipToLocation(4)">地點4</button>
-            <button class="btn btn-dev" onclick="skipToLocation(5)">地點5</button>
-            <button class="btn btn-dev" onclick="skipToLocation(6)">地點6</button>
-            <button class="btn btn-success" onclick="completeGame()">直接完成</button>
+        <!-- ===== 開發者工具 ===== -->
+        <div class="dev-tools" style="margin-top:30px;padding:15px;background:#e9ecef;border-radius:8px">
+            <h3>🔧 開發者工具</h3>
+            <div class="button-group">
+                <button class="btn btn-dev" onclick="skipToLocation(1)">地點1</button>
+                <button class="btn btn-dev" onclick="skipToLocation(2)">地點2</button>
+                <button class="btn btn-dev" onclick="skipToLocation(3)">地點3</button>
+                <button class="btn btn-dev" onclick="skipToLocation(4)">地點4</button>
+                <button class="btn btn-dev" onclick="skipToLocation(5)">地點5</button>
+                <button class="btn btn-dev" onclick="skipToLocation(6)">地點6</button>
+                <button class="btn btn-success" onclick="completeGame()">直接完成</button>
+            </div>
         </div>
     </div>
 
     <script>
-    /* ================= 原問答邏輯（保留） ================= */
+    /* ================= 題目資料 ================= */
+    const POIS = [
+        {id:1, name:'九龍寨城公園',  lat:22.317212 + 0.00080, lng:114.167039 + 0.00080, answer:'衙門'},
+        {id:2, name:'十三街舊樓群', lat:22.317212 - 0.00090, lng:114.167039 + 0.00090, answer:'1950'},
+        {id:3, name:'牛棚藝術村',   lat:22.317212 + 0.00100, lng:114.167039 - 0.00070, answer:'屠宰場'},
+        {id:4, name:'海心公園',     lat:22.317212 - 0.00110, lng:114.167039 - 0.00060, answer:'魚尾石'},
+        {id:5, name:'宋皇臺公園',   lat:22.317212 + 0.00120, lng:114.167039 + 0.00120, answer:'南宋'},
+        {id:6, name:'紅磡觀音廟',   lat:22.317212 - 0.00130, lng:114.167039 + 0.00130, answer:'觀音'}
+    ];
+    const VIDEOS = {   // 留位，換成你的 YouTube ID
+        1: {story:'dQw4w9WgXcQ', hist:'dQw4w9WgXcQ'},
+        2: {story:'AAA', hist:'BBB'},
+        3: {story:'CCC', hist:'DDD'},
+        4: {story:'EEE', hist:'FFF'},
+        5: {story:'GGG', hist:'HHH'},
+        6: {story:'III', hist:'JJJ'}
+    };
+
     let currentLocation = 1, totalLocations = 6;
     const hintCounters = {1:0,2:0,3:0,4:0,5:0,6:0};
+    let distCache      = {};   // 每點距離暫存
+    let promptShownSet = new Set(); // 每點只彈一次提示
+
+    /* ================= 生成 6 張卡片 ================= */
+    function buildCards(){
+        const area = document.getElementById('cards-area');
+        POIS.forEach((p,i)=>{
+            area.insertAdjacentHTML('beforeend', `
+            <div id="location-${p.id}" class="location-card" style="${i?'display:none':''}">
+                <h2>📍 ${p.name}<span id="dist-${p.id}" class="distance-badge">計算中…</span></h2>
+                <p><strong>故事:</strong> 這裡是……（略）</p>
+                <p><strong>問題:</strong> ${p.name}……？</p>
+                <input id="answer-${p.id}" placeholder="輸入答案">
+                <div style="margin-top:10px">
+                    <button class="btn" onclick="checkAnswer(${p.id},'${p.answer}')">提交答案</button>
+                    <button class="btn btn-hint" onclick="showHint(${p.id})">💡 提示 (<span id="hint-count-${p.id}">0</span>/3)</button>
+                </div>
+            </div>`);
+        });
+    }
+    buildCards();
+
+    /* ================= 問答邏輯 ================= */
     function checkAnswer(n,ans){
         if(document.getElementById('answer-'+n).value.trim().includes(ans)){
             alert('✅ 正確！'); document.getElementById('location-'+n).style.display='none';
@@ -183,53 +136,53 @@
         alert(hints[Math.min(hintCounters[n]++,2)]);
         document.getElementById('hint-count-'+n).textContent=hintCounters[n];
     }
-    function skipToLocation(n){ /* 開發者跳關 */ }
-    function completeGame(){ /* 顯示完成 */ }
-    function updateProgress(){ /* 進度條 */ }
+    function updateProgress(){
+        const pc = Math.min(((currentLocation-1)/totalLocations)*100,100);
+        document.getElementById('progress-count').textContent = currentLocation-1;
+        document.getElementById('progress-percent').textContent  = Math.round(pc);
+        document.getElementById('remaining-percent').textContent = Math.round(100-pc);
+        document.getElementById('progress-fill').style.width = pc+'%';
+    }
+    updateProgress();
 
-    /* ================= GPS-AR 自動影片（新） ================= */
-    const HERE = { lat: 22.317212, lng: 114.167039 };   // 你給的座標
-    const POIS = [   // 6 個景點都圍著你偏移 ~50-150 m
-        { id: 1, lat: HERE.lat + 0.00080, lng: HERE.lng + 0.00080 },
-        { id: 2, lat: HERE.lat - 0.00090, lng: HERE.lng + 0.00090 },
-        { id: 3, lat: HERE.lat + 0.00100, lng: HERE.lng - 0.00070 },
-        { id: 4, lat: HERE.lat - 0.00110, lng: HERE.lng - 0.00060 },
-        { id: 5, lat: HERE.lat + 0.00120, lng: HERE.lng + 0.00120 },
-        { id: 6, lat: HERE.lat - 0.00130, lng: HERE.lng + 0.00130 }
-    ];
-    const VIDEOS = {   // 兩段影片 ID（留位，自己換）
-        1: { story: 'dQw4w9WgXcQ', hist: 'dQw4w9WgXcQ' },
-        2: { story: 'AAA',         hist: 'BBB' },
-        3: { story: 'CCC',         hist: 'DDD' },
-        4: { story: 'EEE',         hist: 'FFF' },
-        5: { story: 'GGG',         hist: 'HHH' },
-        6: { story: 'III',         hist: 'JJJ' }
-    };
-    const TRIGGER_M = 200;              // 200 米內觸發（測完改 30）
+    /* ================= GPS 距離 + 可選影片 ================= */
+    const TRIGGER_M = 200;   // 測試半徑，上線改 30
     const player   = document.getElementById('gpsPlayer');
     const overlay  = document.getElementById('gpsVideo');
-    let playedSet  = new Set();
+    const prompt = document.getElementById('gpsPrompt');
+    let   pendingType = ''; // 用戶選了哪片
 
     function dist(a,b){
         const R=6371000, toRad=d=>d*Math.PI/180, dLat=toRad(b.lat-a.lat), dLng=toRad(b.lng-a.lng);
         const la1=toRad(a.lat), la2=toRad(b.lat);
         return 2*R*Math.asin(Math.sqrt(Math.sin(dLat/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)**2));
     }
-    function playTwo(id){
-        if(playedSet.has(id)) return;
-        playedSet.add(id);
-        const {story,hist}=VIDEOS[id];
+    function closePrompt(){ prompt.style.display='none'; }
+    function playSelected(type){
+        pendingType = type;
+        const id = Number(prompt.dataset.poiId);
         overlay.style.display='block';
-        player.src=`https://www.youtube.com/embed/${story}?autoplay=1&rel=0`;
-        setTimeout(()=>{ player.src=`https://www.youtube.com/embed/${hist}?autoplay=1&rel=0`; },20000);
-        setTimeout(()=>{ overlay.style.display='none'; },40000);
+        player.src = `https://www.youtube.com/embed/${VIDEOS[id][type]}?autoplay=1&rel=0`;
+        closePrompt();
+        // 20 秒後自動關閉
+        setTimeout(()=>{ overlay.style.display='none'; player.src=''; },20000);
     }
     function watchGPS(){
         navigator.geolocation.watchPosition(
             pos=>{
                 const here={lat:pos.coords.latitude, lng:pos.coords.longitude};
                 POIS.forEach(p=>{
-                    if(dist(here,p)<TRIGGER_M) playTwo(p.id);
+                    const d = Math.round(dist(here,p));
+                    distCache[p.id] = d;
+                    const badge = document.getElementById('dist-'+p.id);
+                    if(badge) badge.textContent = d<1000 ? d+' m' : (d/1000).toFixed(1)+' km';
+
+                    if(d<TRIGGER_M && !promptShownSet.has(p.id)){
+                        promptShownSet.add(p.id);
+                        prompt.dataset.poiId = p.id;
+                        document.getElementById('promptPoiName').textContent = p.name;
+                        prompt.style.display='block';
+                    }
                 });
             },
             err=>console.warn('GPS 錯誤:',err),
@@ -238,7 +191,7 @@
     }
     window.addEventListener('load',()=>{
         if(navigator.geolocation) watchGPS();
-        else alert('裝置不支援 GPS，無法自動播放影片。');
+        else alert('裝置不支援 GPS，無法使用距離與影片提示。');
     });
     </script>
 </body>
