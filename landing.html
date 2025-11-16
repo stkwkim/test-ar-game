@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>香港城市解謎 - 九龍城及土瓜灣</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #e53935;
-            --secondary-color: #283593;
-            --accent-color: #ffc107;
-            --light-color: #f5f5f5;
-            --dark-color: #212121;
+            --primary-purple: #6a1b9a;
+            --light-purple: #9c4dcc;
+            --dark-purple: #4a0072;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --text-dark: #333333;
         }
         
         * {
@@ -21,9 +23,10 @@
         }
         
         body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
+            background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple));
+            color: var(--text-dark);
             line-height: 1.6;
+            min-height: 100vh;
         }
         
         .container {
@@ -35,13 +38,14 @@
         
         /* 导航栏 */
         header {
-            background-color: var(--secondary-color);
-            color: white;
+            background-color: rgba(106, 27, 154, 0.9);
+            color: var(--white);
             padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
         }
         
         .navbar {
@@ -57,8 +61,9 @@
             align-items: center;
         }
         
-        .logo span {
-            color: var(--accent-color);
+        .logo i {
+            margin-right: 10px;
+            color: #e1bee7;
         }
         
         .nav-links {
@@ -71,65 +76,96 @@
         }
         
         .nav-links a {
-            color: white;
+            color: var(--white);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;
+            position: relative;
         }
         
-        .nav-links a:hover {
-            color: var(--accent-color);
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #e1bee7;
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
         }
         
         .btn {
             display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
+            background: linear-gradient(to right, var(--light-purple), var(--primary-purple));
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: bold;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
         }
         
         .btn:hover {
-            background-color: #c62828;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(106, 27, 154, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--white);
+        }
+        
+        .btn-outline:hover {
+            background: var(--white);
+            color: var(--primary-purple);
         }
         
         /* 英雄区域 */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1549451371-64aa98a6f660?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(74, 0, 114, 0.8), rgba(106, 27, 154, 0.8)), url('https://images.unsplash.com/photo-1549451371-64aa98a6f660?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
-            color: white;
-            padding: 100px 0;
+            color: var(--white);
+            padding: 120px 0;
             text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
         }
         
         .hero h1 {
-            font-size: 3rem;
+            font-size: 3.2rem;
             margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             max-width: 700px;
             margin: 0 auto 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         /* 游戏介绍 */
         .intro {
             padding: 80px 0;
-            background-color: white;
+            background-color: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
         }
         
         .section-title {
             text-align: center;
             margin-bottom: 50px;
             position: relative;
+            color: var(--primary-purple);
         }
         
         .section-title:after {
@@ -137,8 +173,9 @@
             display: block;
             width: 80px;
             height: 4px;
-            background-color: var(--primary-color);
+            background: linear-gradient(to right, var(--light-purple), var(--primary-purple));
             margin: 15px auto;
+            border-radius: 2px;
         }
         
         .intro-content {
@@ -151,11 +188,26 @@
             flex: 1;
         }
         
+        .intro-text h3 {
+            color: var(--primary-purple);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .intro-text p {
+            margin-bottom: 15px;
+        }
+        
         .intro-image {
             flex: 1;
-            border-radius: 8px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.5s;
+        }
+        
+        .intro-image:hover {
+            transform: scale(1.03);
         }
         
         .intro-image img {
@@ -167,7 +219,10 @@
         /* 案件区域 */
         .cases {
             padding: 80px 0;
-            background-color: #f9f9f9;
+            background-color: var(--light-gray);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
         }
         
         .cases-grid {
@@ -177,15 +232,16 @@
         }
         
         .case-card {
-            background-color: white;
-            border-radius: 8px;
+            background-color: var(--white);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         
         .case-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
         
         .case-image {
@@ -205,24 +261,27 @@
         }
         
         .case-content {
-            padding: 20px;
+            padding: 25px;
         }
         
         .case-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             margin-bottom: 10px;
-            color: var(--secondary-color);
+            color: var(--primary-purple);
         }
         
         .case-desc {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #666;
         }
         
         /* 视频区域 */
         .videos {
             padding: 80px 0;
-            background-color: white;
+            background-color: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
         }
         
         .video-container {
@@ -232,8 +291,8 @@
             padding-bottom: 56.25%; /* 16:9 aspect ratio */
             height: 0;
             overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
         
         .video-container iframe {
@@ -248,42 +307,100 @@
         /* 登录区域 */
         .login {
             padding: 80px 0;
-            background-color: var(--secondary-color);
-            color: white;
+            background: linear-gradient(135deg, var(--light-purple), var(--primary-purple));
+            color: var(--white);
             text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
         }
         
-        .login-form {
-            max-width: 400px;
+        .login-container {
+            max-width: 450px;
             margin: 0 auto;
             background-color: rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 8px;
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: left;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 8px;
+            font-weight: 500;
         }
         
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border-radius: 4px;
+            padding: 15px;
+            border-radius: 10px;
             border: none;
+            background-color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+        }
+        
+        .admin-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .admin-toggle {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--white);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .admin-panel {
+            display: none;
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .credentials-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .delete-btn {
+            background: #ff5252;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
         }
         
         /* 底部 */
         footer {
-            background-color: var(--dark-color);
-            color: white;
-            padding: 40px 0;
+            background-color: var(--dark-purple);
+            color: var(--white);
+            padding: 50px 0 20px;
             text-align: center;
+            border-radius: 20px 20px 0 0;
         }
         
         .footer-content {
@@ -291,6 +408,7 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 30px;
+            margin-bottom: 40px;
         }
         
         .footer-section {
@@ -300,7 +418,7 @@
         
         .footer-section h3 {
             margin-bottom: 20px;
-            color: var(--accent-color);
+            color: #e1bee7;
         }
         
         .footer-links {
@@ -318,13 +436,36 @@
         }
         
         .footer-links a:hover {
-            color: var(--accent-color);
+            color: #e1bee7;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: var(--white);
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: var(--light-purple);
+            transform: translateY(-3px);
         }
         
         .copyright {
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid #444;
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
         
         /* 响应式设计 */
@@ -336,10 +477,16 @@
             
             .nav-links {
                 margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 5px 10px;
             }
             
             .hero h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             .intro-content {
@@ -350,6 +497,24 @@
                 flex-direction: column;
                 text-align: center;
             }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .login-container {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -358,7 +523,7 @@
     <header>
         <div class="container">
             <nav class="navbar">
-                <div class="logo">香港<span>城市解謎</span></div>
+                <div class="logo"><i class="fas fa-search-location"></i>香港<span>城市解謎</span></div>
                 <ul class="nav-links">
                     <li><a href="#intro">遊戲介紹</a></li>
                     <li><a href="#cases">案件列表</a></li>
@@ -375,7 +540,7 @@
         <div class="container">
             <h1>探索九龍城及土瓜灣的隱藏故事</h1>
             <p>穿梭於充滿歷史的街巷，解開城市謎題，體驗不一樣的香港</p>
-            <a href="#cases" class="btn">開始探索</a>
+            <a href="#login" class="btn">開始探索</a>
         </div>
     </section>
 
@@ -389,6 +554,7 @@
                     <p>九龍城及土瓜灣地區蘊含著豐富的歷史文化與都市傳說，從前九龍城寨的神秘氛圍到土瓜灣的工業變遷，每一條街道都藏著不為人知的故事。</p>
                     <p>我們的解謎遊戲將帶領您走進這些充滿魅力的街區，通過實地探索、線索收集和謎題破解，深入了解香港的多元文化與歷史變遷。</p>
                     <p>準備好迎接挑戰了嗎？加入我們，成為城市探秘者！</p>
+                    <a href="#cases" class="btn" style="margin-top: 15px;">查看案件</a>
                 </div>
                 <div class="intro-image">
                     <img src="https://images.unsplash.com/photo-1597074862788-84b4bf0c1a58?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="九龍城區街景">
@@ -409,7 +575,7 @@
                     <div class="case-content">
                         <h3 class="case-title">消失的九龍城寨</h3>
                         <p class="case-desc">探索曾經的「三不管」地帶，解開九龍城寨拆除前的未解之謎。</p>
-                        <a href="#" class="btn">報名參加</a>
+                        <a href="#login" class="btn">報名參加</a>
                     </div>
                 </div>
                 
@@ -420,7 +586,7 @@
                     <div class="case-content">
                         <h3 class="case-title">土瓜灣工廈秘聞</h3>
                         <p class="case-desc">深入工業區舊址，揭開香港工業黃金時代的隱藏故事。</p>
-                        <a href="#" class="btn">報名參加</a>
+                        <a href="#login" class="btn">報名參加</a>
                     </div>
                 </div>
                 
@@ -431,7 +597,7 @@
                     <div class="case-content">
                         <h3 class="case-title">宋皇臺傳說</h3>
                         <p class="case-desc">追尋南宋末代皇帝在九龍的足跡，破解歷史遺留的密碼。</p>
-                        <a href="#" class="btn">報名參加</a>
+                        <a href="#login" class="btn">報名參加</a>
                     </div>
                 </div>
             </div>
@@ -452,17 +618,50 @@
     <section id="login" class="login">
         <div class="container">
             <h2 class="section-title">登入遊戲</h2>
-            <div class="login-form">
+            <div class="login-container">
                 <div class="form-group">
-                    <label for="username">用戶名稱</label>
-                    <input type="text" id="username" placeholder="請輸入用戶名稱">
+                    <label for="phone">手機號碼</label>
+                    <input type="tel" id="phone" placeholder="請輸入手機號碼">
                 </div>
                 <div class="form-group">
-                    <label for="password">密碼</label>
-                    <input type="password" id="password" placeholder="請輸入密碼">
+                    <label for="code">驗證碼</label>
+                    <input type="text" id="code" placeholder="請輸入驗證碼">
                 </div>
-                <button class="btn" style="width: 100%;">登入</button>
-                <p style="margin-top: 15px;">還沒有帳號？<a href="#" style="color: var(--accent-color);">立即註冊</a></p>
+                <button id="loginBtn" class="btn" style="width: 100%;">進入遊戲</button>
+                <p style="margin-top: 15px;">還沒有帳號？<a href="#" style="color: #e1bee7; font-weight: bold;">聯繫我們註冊</a></p>
+                
+                <div class="admin-section">
+                    <button class="admin-toggle" id="adminToggle">管理員設置</button>
+                    <div class="admin-panel" id="adminPanel">
+                        <div class="form-group">
+                            <label for="adminUser">管理員帳號</label>
+                            <input type="text" id="adminUser" placeholder="管理員帳號">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminPass">管理員密碼</label>
+                            <input type="password" id="adminPass" placeholder="管理員密碼">
+                        </div>
+                        <button id="adminLogin" class="btn" style="width: 100%; margin-bottom: 15px;">管理員登入</button>
+                        
+                        <div id="adminControls" style="display: none;">
+                            <h4 style="margin-bottom: 15px; text-align: center;">憑證管理</h4>
+                            <div class="form-group">
+                                <label for="newPhone">新增手機號碼</label>
+                                <input type="tel" id="newPhone" placeholder="手機號碼">
+                            </div>
+                            <div class="form-group">
+                                <label for="newCode">新增驗證碼</label>
+                                <input type="text" id="newCode" placeholder="驗證碼">
+                            </div>
+                            <button id="addCredential" class="btn" style="width: 100%; margin-bottom: 15px;">新增憑證</button>
+                            
+                            <h4 style="margin-bottom: 10px;">現有憑證</h4>
+                            <div class="credentials-list" id="credentialsList">
+                                <!-- 憑證列表將在這裡動態生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -474,6 +673,12 @@
                 <div class="footer-section">
                     <h3>關於我們</h3>
                     <p>我們是一群熱愛香港歷史與文化的團隊，致力於通過創新的遊戲形式，讓更多人了解和體驗香港獨特的城市魅力。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
                 </div>
                 <div class="footer-section">
                     <h3>快速連結</h3>
@@ -487,9 +692,9 @@
                 <div class="footer-section">
                     <h3>聯絡我們</h3>
                     <ul class="footer-links">
-                        <li>電話: +852 1234 5678</li>
-                        <li>電郵: info@hkcitymystery.hk</li>
-                        <li>地址: 九龍城區某某大廈</li>
+                        <li><i class="fas fa-phone"></i> 電話: +852 1234 5678</li>
+                        <li><i class="fas fa-envelope"></i> 電郵: info@hkcitymystery.hk</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 地址: 九龍城區某某大廈</li>
                     </ul>
                 </div>
             </div>
@@ -518,19 +723,139 @@
             });
         });
         
-        // 简单的表单验证
-        document.querySelector('.login-form .btn').addEventListener('click', function() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if(!username || !password) {
-                alert('請填寫所有欄位');
-                return;
+        // 初始化本地存储中的凭证
+        function initializeCredentials() {
+            if (!localStorage.getItem('credentials')) {
+                const defaultCredentials = [
+                    { phone: '13800138000', code: '123456' },
+                    { phone: '13900139000', code: '654321' },
+                    { phone: '13700137000', code: '888888' }
+                ];
+                localStorage.setItem('credentials', JSON.stringify(defaultCredentials));
             }
+            updateCredentialsList();
+        }
+        
+        // 更新凭证列表显示
+        function updateCredentialsList() {
+            const credentials = JSON.parse(localStorage.getItem('credentials') || '[]');
+            const credentialsList = document.getElementById('credentialsList');
+            credentialsList.innerHTML = '';
             
-            // 这里应该发送到服务器进行验证
-            // 现在只是模拟登录成功
-            alert('登入成功！即將進入遊戲...');
+            credentials.forEach((cred, index) => {
+                const item = document.createElement('div');
+                item.className = 'credential-item';
+                item.innerHTML = `
+                    <span>${cred.phone} / ${cred.code}</span>
+                    <button class="delete-btn" data-index="${index}">刪除</button>
+                `;
+                credentialsList.appendChild(item);
+            });
+            
+            // 添加删除事件监听
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteCredential(index);
+                });
+            });
+        }
+        
+        // 删除凭证
+        function deleteCredential(index) {
+            const credentials = JSON.parse(localStorage.getItem('credentials') || '[]');
+            credentials.splice(index, 1);
+            localStorage.setItem('credentials', JSON.stringify(credentials));
+            updateCredentialsList();
+        }
+        
+        // 添加新凭证
+        function addCredential(phone, code) {
+            const credentials = JSON.parse(localStorage.getItem('credentials') || '[]');
+            credentials.push({ phone, code });
+            localStorage.setItem('credentials', JSON.stringify(credentials));
+            updateCredentialsList();
+        }
+        
+        // 验证登录凭证
+        function validateLogin(phone, code) {
+            const credentials = JSON.parse(localStorage.getItem('credentials') || '[]');
+            return credentials.some(cred => cred.phone === phone && cred.code === code);
+        }
+        
+        // 管理员登录
+        function adminLogin(username, password) {
+            return username === 'admin' && password === 'admin123';
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCredentials();
+            
+            // 普通用户登录
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                const phone = document.getElementById('phone').value;
+                const code = document.getElementById('code').value;
+                
+                if (!phone || !code) {
+                    alert('請填寫所有欄位');
+                    return;
+                }
+                
+                if (validateLogin(phone, code)) {
+                    alert('登入成功！即將進入遊戲...');
+                    // 这里可以跳转到游戏页面
+                } else {
+                    alert('手機號碼或驗證碼錯誤，請重試');
+                }
+            });
+            
+            // 管理员面板切换
+            document.getElementById('adminToggle').addEventListener('click', function() {
+                const panel = document.getElementById('adminPanel');
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // 管理员登录
+            document.getElementById('adminLogin').addEventListener('click', function() {
+                const username = document.getElementById('adminUser').value;
+                const password = document.getElementById('adminPass').value;
+                
+                if (!username || !password) {
+                    alert('請填寫管理員帳號和密碼');
+                    return;
+                }
+                
+                if (adminLogin(username, password)) {
+                    document.getElementById('adminControls').style.display = 'block';
+                    alert('管理員登入成功');
+                } else {
+                    alert('管理員帳號或密碼錯誤');
+                }
+            });
+            
+            // 添加新凭证
+            document.getElementById('addCredential').addEventListener('click', function() {
+                const phone = document.getElementById('newPhone').value;
+                const code = document.getElementById('newCode').value;
+                
+                if (!phone || !code) {
+                    alert('請填寫手機號碼和驗證碼');
+                    return;
+                }
+                
+                addCredential(phone, code);
+                document.getElementById('newPhone').value = '';
+                document.getElementById('newCode').value = '';
+                alert('憑證添加成功');
+            });
+            
+            // 按Enter键登录
+            document.getElementById('code').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('loginBtn').click();
+                }
+            });
         });
     </script>
 </body>
