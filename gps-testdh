@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS版本 - 九龍城土瓜灣探索</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .status-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .status-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-title {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        
+        .status-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .gps-active {
+            color: #4ade80;
+        }
+        
+        .gps-inactive {
+            color: #f87171;
+        }
+        
+        .location-info {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .location-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .location-title i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .location-description {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .coordinates {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+        
+        .coordinate {
+            text-align: center;
+        }
+        
+        .coordinate-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .coordinate-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .video-section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .video-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .video-description {
+            margin-top: 15px;
+            font-style: italic;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+        }
+        
+        .notification.active {
+            transform: translateX(0);
+        }
+        
+        .notification i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80, #22d3ee);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .ar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .ar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .ar-content {
+            background: white;
+            color: #333;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 90%;
+            width: 600px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .ar-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #4f46e5;
+        }
+        
+        .ar-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .ar-close {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .status-container {
+                flex-direction: column;
+            }
+            
+            .status-box {
+                min-width: 100%;
+            }
+            
+            .coordinates {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="notification" id="notification">
+        <i class="fas fa-map-marker-alt"></i>
+        <span id="notification-text">您已到達目的地！開始播放影片...</span>
+    </div>
+
+    <div class="ar-overlay" id="ar-overlay">
+        <div class="ar-content">
+            <h2 class="ar-title">AR體驗準備就緒</h2>
+            <p class="ar-description">在AR版本中，您將看到歷史場景與現實環境的疊加效果。影片內容將與您周圍的實際環境互動，提供沉浸式的歷史體驗。</p>
+            <p class="ar-description">請將手機對準周圍環境，開始探索九龍城寨的歷史故事。</p>
+            <button class="ar-close" id="ar-close">關閉AR預覽</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>九龍城土瓜灣探索</h1>
+        <p class="subtitle">GPS版本 - 自動播放AR影片體驗</p>
+    </header>
+
+    <div class="container">
+        <div class="status-container">
+            <div class="status-box">
+                <div class="status-title">GPS狀態</div>
+                <div class="status-value gps-active" id="gps-status">已啟動</div>
+            </div>
+            <div class="status-box">
+                <div class="status-title">當前位置</div>
+                <div class="status-value" id="location-status">接近目標</div>
+            </div>
+            <div class="status-box">
+                <div class="status-title">影片狀態</div>
+                <div class="status-value" id="video-status">等待播放</div>
+            </div>
+        </div>
+
+        <div class="location-info">
+            <h2 class="location-title">
+                <i class="fas fa-landmark"></i>
+                九龍寨城公園
+            </h2>
+            <p class="location-description">
+                九龍寨城公園位於香港九龍城，原址為九龍寨城。這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。想像一下，在1987年清拆之前，這裡是高密度建築的迷宮，充滿著各種故事和傳奇。
+            </p>
+            <div class="coordinates">
+                <div class="coordinate">
+                    <div class="coordinate-label">目標緯度</div>
+                    <div class="coordinate-value">22.317212</div>
+                </div>
+                <div class="coordinate">
+                    <div class="coordinate-label">目標經度</div>
+                    <div class="coordinate-value">114.167039</div>
+                </div>
+                <div class="coordinate">
+                    <div class="coordinate-label">觸發半徑</div>
+                    <div class="coordinate-value">50 米</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="video-section">
+            <h3 class="section-title">
+                <i class="fas fa-play-circle"></i>
+                故事進度影片
+            </h3>
+            <div class="video-container">
+                <div class="video-placeholder" id="story-video-placeholder">
+                    <i class="fas fa-film"></i>
+                    <p>故事進度影片將在您到達目的地時自動播放</p>
+                </div>
+            </div>
+            <p class="video-description">
+                這段影片將介紹九龍寨城的發展歷程與社區變遷，從清代軍事要塞到獨特的城中城社區，再到今天的公園。
+            </p>
+        </div>
+
+        <div class="video-section">
+            <h3 class="section-title">
+                <i class="fas fa-history"></i>
+                歷史影片
+            </h3>
+            <div class="video-container">
+                <div class="video-placeholder" id="history-video-placeholder">
+                    <i class="fas fa-video"></i>
+                    <p>歷史影片將在故事影片結束後自動播放</p>
+                </div>
+            </div>
+            <p class="video-description">
+                這段影片將深入探索九龍寨城的傳奇歷史，展示其獨特的建築結構、社區生活和清拆過程。
+            </p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="simulate-btn">
+                <i class="fas fa-location-arrow"></i>
+                模擬到達目的地
+            </button>
+            <button class="btn btn-secondary" id="ar-preview-btn">
+                <i class="fas fa-vr-cardboard"></i>
+                AR效果預覽
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 目標位置坐標
+        const TARGET_LAT = 22.317212;
+        const TARGET_LNG = 114.167039;
+        const TRIGGER_RADIUS = 50; // 觸發半徑（米）
+        
+        // 狀態變量
+        let isAtLocation = false;
+        let storyVideoPlayed = false;
+        let historyVideoPlayed = false;
+        let watchId = null;
+        
+        // DOM元素
+        const gpsStatus = document.getElementById('gps-status');
+        const locationStatus = document.getElementById('location-status');
+        const videoStatus = document.getElementById('video-status');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+        const progressBar = document.getElementById('progress-bar');
+        const storyVideoPlaceholder = document.getElementById('story-video-placeholder');
+        const historyVideoPlaceholder = document.getElementById('history-video-placeholder');
+        const simulateBtn = document.getElementById('simulate-btn');
+        const arPreviewBtn = document.getElementById('ar-preview-btn');
+        const arOverlay = document.getElementById('ar-overlay');
+        const arClose = document.getElementById('ar-close');
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 啟動GPS監控
+            startGPSMonitoring();
+            
+            // 綁定事件
+            simulateBtn.addEventListener('click', simulateLocation);
+            arPreviewBtn.addEventListener('click', showARPreview);
+            arClose.addEventListener('click', hideARPreview);
+        });
+        
+        // 啟動GPS監控
+        function startGPSMonitoring() {
+            if (navigator.geolocation) {
+                gpsStatus.textContent = "監控中";
+                gpsStatus.className = "status-value gps-active";
+                
+                // 開始監控位置
+                watchId = navigator.geolocation.watchPosition(
+                    handlePositionUpdate,
+                    handlePositionError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            } else {
+                gpsStatus.textContent = "不支持";
+                gpsStatus.className = "status-value gps-inactive";
+                locationStatus.textContent = "無法獲取位置";
+            }
+        }
+        
+        // 處理位置更新
+        function handlePositionUpdate(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            
+            // 計算與目標位置的距離
+            const distance = calculateDistance(userLat, userLng, TARGET_LAT, TARGET_LNG);
+            
+            // 更新位置狀態
+            if (distance <= TRIGGER_RADIUS) {
+                locationStatus.textContent = "已到達目的地";
+                locationStatus.className = "status-value gps-active";
+                
+                // 如果之前不在位置，現在到達了位置
+                if (!isAtLocation) {
+                    isAtLocation = true;
+                    triggerLocationReached();
+                }
+                
+                // 更新進度條
+                progressBar.style.width = "100%";
+            } else {
+                locationStatus.textContent = `${Math.round(distance)} 米外`;
+                locationStatus.className = "status-value";
+                
+                // 更新進度條（距離越近，進度越高）
+                const progress = Math.max(0, 100 - (distance / 5));
+                progressBar.style.width = `${Math.min(progress, 100)}%`;
+                
+                isAtLocation = false;
+            }
+        }
+        
+        // 處理位置錯誤
+        function handlePositionError(error) {
+            let errorMessage = "無法獲取位置";
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "位置權限被拒絕";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "位置信息不可用";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "獲取位置超時";
+                    break;
+            }
+            
+            gpsStatus.textContent = "錯誤";
+            gpsStatus.className = "status-value gps-inactive";
+            locationStatus.textContent = errorMessage;
+        }
+        
+        // 計算兩個坐標點之間的距離（米）
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371000; // 地球半徑（米）
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+            return distance;
+        }
+        
+        // 觸發到達位置
+        function triggerLocationReached() {
+            // 顯示通知
+            notificationText.textContent = "您已到達九龍寨城公園！開始播放故事影片...";
+            notification.classList.add('active');
+            
+            // 更新影片狀態
+            videoStatus.textContent = "播放故事影片";
+            
+            // 3秒後隱藏通知
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 5000);
+            
+            // 播放故事影片
+            playStoryVideo();
+        }
+        
+        // 播放故事影片
+        function playStoryVideo() {
+            // 更新影片佔位符
+            storyVideoPlaceholder.innerHTML = `
+                <i class="fas fa-play-circle"></i>
+                <p>正在播放: 九龍寨城的故事進度</p>
+                <p>影片長度: 2分30秒</p>
+            `;
+            storyVideoPlaceholder.style.background = "linear-gradient(135deg, #10b981, #059669)";
+            
+            // 模擬影片播放
+            setTimeout(() => {
+                storyVideoPlayed = true;
+                videoStatus.textContent = "故事影片已完成";
+                
+                // 播放歷史影片
+                playHistoryVideo();
+            }, 5000); // 5秒後模擬影片結束
+        }
+        
+        // 播放歷史影片
+        function playHistoryVideo() {
+            // 顯示通知
+            notificationText.textContent = "故事影片結束，開始播放歷史影片...";
+            notification.classList.add('active');
+            
+            // 3秒後隱藏通知
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 5000);
+            
+            // 更新影片佔位符
+            historyVideoPlaceholder.innerHTML = `
+                <i class="fas fa-play-circle"></i>
+                <p>正在播放: 九龍寨城的歷史</p>
+                <p>影片長度: 3分15秒</p>
+            `;
+            historyVideoPlaceholder.style.background = "linear-gradient(135deg, #f59e0b, #d97706)";
+            
+            // 模擬影片播放
+            setTimeout(() => {
+                historyVideoPlayed = true;
+                videoStatus.textContent = "歷史影片已完成";
+                
+                // 顯示完成通知
+                notificationText.textContent = "所有影片播放完畢！感謝您的探索。";
+                notification.classList.add('active');
+                
+                setTimeout(() => {
+                    notification.classList.remove('active');
+                }, 5000);
+            }, 8000); // 8秒後模擬影片結束
+        }
+        
+        // 模擬到達位置
+        function simulateLocation() {
+            // 觸發到達位置
+            isAtLocation = true;
+            triggerLocationReached();
+            
+            // 更新狀態
+            locationStatus.textContent = "已到達目的地";
+            locationStatus.className = "status-value gps-active";
+            progressBar.style.width = "100%";
+        }
+        
+        // 顯示AR預覽
+        function showARPreview() {
+            arOverlay.classList.add('active');
+        }
+        
+        // 隱藏AR預覽
+        function hideARPreview() {
+            arOverlay.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
