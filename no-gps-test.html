@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>免GPS測試版 - 九龍城土瓜灣探索</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        .location-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-hint {
+            background: #ffc107;
+            color: black;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .completion {
+            background: #d4edda;
+            color: #155724;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        .progress {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ 九龍城土瓜灣探索<br><small>免GPS測試版</small></h1>
+        
+        <div class="progress">
+            進度: <span id="progress">1</span>/6
+        </div>
+
+        <!-- 地點1: 九龍寨城公園 -->
+        <div id="location-1" class="location-card">
+            <h2>📍 九龍寨城公園</h2>
+            <p><strong>故事:</strong> 這裡曾是充滿傳奇的九龍寨城，一個在三不管地帶中自然形成的獨特社區。想像一下，在1987年清拆之前，這裡是高密度建築的迷宮，充滿著各種故事和傳奇。</p>
+            <p><strong>問題:</strong> 九龍寨城公園保留了清代衙門的哪個重要建築結構？</p>
+            <input type="text" id="answer-1" placeholder="輸入您的答案">
+            <button class="btn" onclick="checkAnswer(1, '衙門')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(1)">💡 顯示提示</button>
+        </div>
+
+        <!-- 地點2: 十三街舊樓群 -->
+        <div id="location-2" class="location-card" style="display:none;">
+            <h2>🏢 十三街舊樓群</h2>
+            <p><strong>故事:</strong> 十三街見證了土瓜灣的工業發展史。這些戰前騎樓建築融合了中西建築風格，曾經是繁華的商業街道，現在則是社區生活的見證。</p>
+            <p><strong>問題:</strong> 十三街的騎樓建築主要建於哪個年代？</p>
+            <input type="text" id="answer-2" placeholder="輸入您的答案">
+            <button class="btn" onclick="checkAnswer(2, '1950')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(2)">💡 顯示提示</button>
+        </div>
+
+        <!-- 地點3: 土瓜灣牛棚藝術村 -->
+        <div id="location-3" class="location-card" style="display:none;">
+            <h2>🎨 土瓜灣牛棚藝術村</h2>
+            <p><strong>故事:</strong> 這裡曾是香港唯一的市區屠宰場，建於1908年。經過活化後，紅磚建築群變成了藝術家的工作室和展覽空間，見證了城市空間功能的轉變。</p>
+            <p><strong>問題:</strong> 牛棚藝術村的前身是什麼建築？</p>
+            <input type="text" id="answer-3" placeholder="輸入您的答案">
+            <button class="btn" onclick="checkAnswer(3, '屠宰場')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(3)">💡 顯示提示</button>
+        </div>
+
+        <!-- 地點4: 海心公園 -->
+        <div id="location-4" class="location-card" style="display:none;">
+            <h2>🌊 海心公園</h2>
+            <p><strong>故事:</strong> 海心公園以獨特的魚尾石聞名，這裡曾經是海邊，漁民會在此祈求平安。公園內還有鄭成功石像，訴說著香港與海洋的深厚淵源。</p>
+            <p><strong>問題:</strong> 海心公園最著名的自然景觀是什麼石？</p>
+            <input type="text" id="answer-4" placeholder="輸入您的答案">
+            <button class="btn" onclick="checkAnswer(4, '魚尾石')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(4)">💡 顯示提示</button>
+        </div>
+
+        <!-- 地點5: 宋皇臺公園 -->
+        <div id="location-5" class="location-card" style="display:none;">
+            <h2>👑 宋皇臺公園</h2>
+            <p><strong>故事:</strong> 這裡是南宋最後兩位皇帝逃避元軍的地方。『宋皇臺』石刻見證了香港在中國歷史中的重要地位，是香港最古老的歷史遺跡之一。</p>
+            <p><strong>問題:</strong> 宋皇臺紀念的是哪個朝代的皇帝？</p>
+            <input type="text" id="answer-5" placeholder="輸入您的答案">
+            <button class="btn" onclick="checkAnswer(5, '南宋')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(5)">💡 顯示提示</button>
+        </div>
+
+        <!-- 地點6: 紅磡觀音廟 -->
+        <div id="location-6" class="location-card" style="display:none;">
+            <h2>🙏 紅磡觀音廟</h2>
+            <p><strong>故事:</strong> 建於1873年的紅磡觀音廟是香港二級歷史建築，見證了紅磡地區的發展。這裡不僅是宗教場所，更是社區凝聚的重要空間。</p>
+            <p><strong>問題:</strong> 紅磡觀音廟主要供奉哪位神祇？</p>
+            <input type="text" id="answer-6" placeholder="輸入您的答案">
+            <button class="btn" onclick="checkAnswer(6, '觀音')">提交答案</button>
+            <button class="btn btn-hint" onclick="showHint(6)">💡 顯示提示</button>
+        </div>
+
+        <!-- 完成慶祝 -->
+        <div id="completion" class="completion">
+            <h2>🎉 恭喜您完成所有探索！</h2>
+            <p>您已成功完成九龍城土瓜灣的6個歷史地點探索！</p>
+            <button class="btn btn-success" onclick="resetGame()">重新開始遊戲</button>
+        </div>
+
+        <!-- 開發者工具 -->
+        <div style="margin-top: 30px; padding: 15px; background: #e9ecef; border-radius: 8px;">
+            <h3>🔧 開發者工具</h3>
+            <button class="btn" onclick="skipToLocation(2)">跳轉到地點2</button>
+            <button class="btn" onclick="skipToLocation(3)">跳轉到地點3</button>
+            <button class="btn" onclick="skipToLocation(4)">跳轉到地點4</button>
+            <button class="btn" onclick="skipToLocation(5)">跳轉到地點5</button>
+            <button class="btn" onclick="skipToLocation(6)">跳轉到地點6</button>
+            <button class="btn" onclick="completeGame()">直接完成遊戲</button>
+        </div>
+    </div>
+
+    <script>
+        let currentLocation = 1;
+        const totalLocations = 6;
+
+        function checkAnswer(locationNum, correctAnswer) {
+            const userAnswer = document.getElementById('answer-' + locationNum).value.trim().toLowerCase();
+            const correct = correctAnswer.toLowerCase();
+            
+            if (userAnswer === correct) {
+                alert('✅ 答案正確！恭喜您完成這個地點的探索！');
+                
+                // 隱藏當前地點
+                document.getElementById('location-' + locationNum).style.display = 'none';
+                
+                // 更新進度
+                currentLocation++;
+                document.getElementById('progress').textContent = currentLocation;
+                
+                if (currentLocation <= totalLocations) {
+                    // 顯示下一個地點
+                    document.getElementById('location-' + currentLocation).style.display = 'block';
+                } else {
+                    // 完成所有地點
+                    completeGame();
+                }
+                
+                // 清空答案框
+                document.getElementById('answer-' + locationNum).value = '';
+                
+            } else {
+                alert('❌ 答案不正確，請再試一次或查看提示。');
+            }
+        }
+
+        function showHint(locationNum) {
+            const hints = {
+                1: '提示：留意公園內保存最完整的古建築',
+                2: '提示：想想香港戰後重建的時期', 
+                3: '提示：想想這個地方原本的用途與「牛」有關',
+                4: '提示：想想與海洋生物有關的石頭',
+                5: '提示：想想中國歷史中南北宋的時期',
+                6: '提示：廟宇名稱已經提示了答案'
+            };
+            alert(hints[locationNum]);
+        }
+
+        function skipToLocation(locationNum) {
+            // 隱藏所有地點
+            for (let i = 1; i <= totalLocations; i++) {
+                document.getElementById('location-' + i).style.display = 'none';
+            }
+            
+            // 顯示指定地點
+            document.getElementById('location-' + locationNum).style.display = 'block';
+            currentLocation = locationNum;
+            document.getElementById('progress').textContent = currentLocation;
+            
+            // 隱藏完成訊息
+            document.getElementById('completion').style.display = 'none';
+            
+            alert('已跳轉到地點 ' + locationNum);
+        }
+
+        function completeGame() {
+            // 隱藏所有地點
+            for (let i = 1; i <= totalLocations; i++) {
+                document.getElementById('location-' + i).style.display = 'none';
+            }
+            
+            // 顯示完成訊息
+            document.getElementById('completion').style.display = 'block';
+            document.getElementById('progress').textContent = totalLocations;
+        }
+
+        function resetGame() {
+            // 隱藏所有地點和完成訊息
+            for (let i = 2; i <= totalLocations; i++) {
+                document.getElementById('location-' + i).style.display = 'none';
+            }
+            document.getElementById('completion').style.display = 'none';
+            
+            // 顯示第一個地點
+            document.getElementById('location-1').style.display = 'block';
+            currentLocation = 1;
+            document.getElementById('progress').textContent = currentLocation;
+            
+            // 清空所有答案
+            for (let i = 1; i <= totalLocations; i++) {
+                document.getElementById('answer-' + i).value = '';
+            }
+            
+            alert('遊戲已重置！');
+        }
+    </script>
+</body>
+</html>
