@@ -395,13 +395,19 @@
             font-weight: 500;
         }
         
-        .form-group input {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 15px;
             border-radius: 10px;
             border: none;
             background-color: rgba(255,255,255,0.9);
             font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
         }
         
         .admin-section {
@@ -492,6 +498,8 @@
             padding: 40px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         .close-btn {
@@ -507,6 +515,16 @@
         
         .registration-form .form-group {
             margin-bottom: 20px;
+        }
+        
+        .gift-info {
+            background: linear-gradient(135deg, var(--light-purple), var(--primary-purple));
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
         }
         
         /* 底部 */
@@ -804,22 +822,37 @@
         <div class="registration-container">
             <button class="close-btn" id="closeRegistration">&times;</button>
             <h2 class="section-title">案件報名</h2>
-            <form class="registration-form">
+            <form class="registration-form" id="registrationForm">
                 <div class="form-group">
-                    <label for="regName">姓名</label>
-                    <input type="text" id="regName" placeholder="請輸入您的姓名">
+                    <label for="regName">主要聯絡人姓名</label>
+                    <input type="text" id="regName" placeholder="請輸入您的姓名" required>
                 </div>
                 <div class="form-group">
                     <label for="regPhone">手機號碼</label>
-                    <input type="tel" id="regPhone" placeholder="請輸入手機號碼">
+                    <input type="tel" id="regPhone" placeholder="請輸入手機號碼" required>
                 </div>
                 <div class="form-group">
                     <label for="regEmail">電子郵件</label>
-                    <input type="email" id="regEmail" placeholder="請輸入電子郵件">
+                    <input type="email" id="regEmail" placeholder="請輸入電子郵件" required>
+                </div>
+                <div class="form-group">
+                    <label for="regParticipants">參與人數</label>
+                    <select id="regParticipants" required>
+                        <option value="">請選擇參與人數</option>
+                        <option value="1">1人</option>
+                        <option value="2">2人</option>
+                        <option value="3">3人</option>
+                        <option value="4">4人</option>
+                    </select>
+                </div>
+                <div class="form-group" id="otherParticipantsGroup" style="display: none;">
+                    <label for="otherParticipants">其他參加者資料</label>
+                    <textarea id="otherParticipants" placeholder="請填寫其他參加者的姓名和聯絡方式（每人一行）"></textarea>
+                    <small style="color: var(--text-light);">請為每位參加者填寫姓名和聯絡電話，每人一行</small>
                 </div>
                 <div class="form-group">
                     <label for="regCase">選擇案件</label>
-                    <select id="regCase" style="width: 100%; padding: 15px; border-radius: 10px; border: none; background-color: #f5f5f5;">
+                    <select id="regCase" required>
                         <option value="">請選擇案件</option>
                         <option value="case1">消失的九龍城寨</option>
                         <option value="case2">土瓜灣工廈秘聞</option>
@@ -828,9 +861,15 @@
                 </div>
                 <div class="form-group">
                     <label for="regDate">選擇日期</label>
-                    <input type="date" id="regDate" style="width: 100%; padding: 15px; border-radius: 10px; border: none; background-color: #f5f5f5;">
+                    <input type="date" id="regDate" required>
                 </div>
-                <button type="button" class="btn btn-accent" style="width: 100%; margin-top: 20px;" id="submitRegistration">提交報名</button>
+                
+                <div class="gift-info" id="giftInfo">
+                    <h4><i class="fas fa-gift"></i> 禮物資訊</h4>
+                    <p>根據您的參與人數，您將獲得 <span id="giftCount">0</span> 份精美禮物！</p>
+                </div>
+                
+                <button type="submit" class="btn btn-accent" style="width: 100%; margin-top: 20px;" id="submitRegistration">提交報名</button>
             </form>
         </div>
     </div>
@@ -967,6 +1006,20 @@
             document.getElementById('registrationPage').style.display = 'none';
         }
         
+        // 更新礼物信息
+        function updateGiftInfo() {
+            const participants = document.getElementById('regParticipants').value;
+            const giftInfo = document.getElementById('giftInfo');
+            const giftCount = document.getElementById('giftCount');
+            
+            if (participants) {
+                giftCount.textContent = participants;
+                giftInfo.style.display = 'block';
+            } else {
+                giftInfo.style.display = 'none';
+            }
+        }
+        
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
             initializeCredentials();
@@ -1005,28 +1058,66 @@
                 hideRegistrationPage();
             });
             
+            // 参与人数变化事件
+            document.getElementById('regParticipants').addEventListener('change', function() {
+                const participants = this.value;
+                const otherParticipantsGroup = document.getElementById('otherParticipantsGroup');
+                
+                if (participants > 1) {
+                    otherParticipantsGroup.style.display = 'block';
+                } else {
+                    otherParticipantsGroup.style.display = 'none';
+                }
+                
+                updateGiftInfo();
+            });
+            
             // 提交报名
-            document.getElementById('submitRegistration').addEventListener('click', function() {
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
                 const name = document.getElementById('regName').value;
                 const phone = document.getElementById('regPhone').value;
                 const email = document.getElementById('regEmail').value;
+                const participants = document.getElementById('regParticipants').value;
+                const otherParticipants = document.getElementById('otherParticipants').value;
                 const caseSelected = document.getElementById('regCase').value;
                 const date = document.getElementById('regDate').value;
                 
-                if (!name || !phone || !email || !caseSelected || !date) {
-                    alert('請填寫所有欄位');
+                if (!name || !phone || !email || !participants || !caseSelected || !date) {
+                    alert('請填寫所有必填欄位');
                     return;
                 }
+                
+                // 如果有其他参加者但未填写资料
+                if (participants > 1 && !otherParticipants) {
+                    alert('請填寫其他參加者資料');
+                    return;
+                }
+                
+                // 创建表单数据对象
+                const formData = {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    participants: participants,
+                    otherParticipants: otherParticipants,
+                    case: caseSelected,
+                    date: date,
+                    gifts: participants // 礼物数量等于参与人数
+                };
+                
+                // 在实际应用中，这里应该发送数据到服务器
+                // 这里我们只是模拟提交
+                console.log('报名数据已提交:', formData);
                 
                 alert('報名成功！我們將在24小時內與您聯繫確認詳情。');
                 hideRegistrationPage();
                 
                 // 清空表单
-                document.getElementById('regName').value = '';
-                document.getElementById('regPhone').value = '';
-                document.getElementById('regEmail').value = '';
-                document.getElementById('regCase').value = '';
-                document.getElementById('regDate').value = '';
+                document.getElementById('registrationForm').reset();
+                document.getElementById('otherParticipantsGroup').style.display = 'none';
+                document.getElementById('giftInfo').style.display = 'none';
             });
             
             // 普通用户登录
